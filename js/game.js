@@ -23,7 +23,7 @@ const sampleProfile = {
 var game = new Phaser.Game(config);
 
 //required var
-let version = "1.1.1";
+let version = "1.1.2";
 let minePerClick = 1;
 let profile;
 let elasped;
@@ -69,7 +69,7 @@ function create() {
 
 	//mine button
 	this.add.graphics().fillStyle(0xC36D1D, 0.22).fillCircle(680, 300, 70).fillCircle(680, 300, 90)
-	this.mineBtn = this.add.sprite(4, 300, 'mineLogo').setScale(0.20).setInteractive()
+	this.mineBtn = this.add.sprite(684, 300, 'mineLogo').setScale(0.20).setInteractive()
 	.on('pointerdown', function() {
 	  this.scale -= 0.05;
 	  //add clicks
