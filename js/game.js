@@ -23,10 +23,10 @@ const sampleProfile = {
 var game = new Phaser.Game(config);
 
 //required var
-let version = "1.2.1";
+let version = "1.2.2";
 let minePerClick = 1;
 let profile;
-let elaspedTxt, usernameTxt;
+let elaspedTxt, usernameTxt, ttlClicksTxt;
 
 function preload() {
 	this.load.image('background', '../assets/images/bg_cave.jpg');
@@ -100,6 +100,7 @@ function create() {
 	this.add.graphics().fillStyle(0x59463B, 0.8).fillRoundedRect(980, 10, 340, 40, { tl: 40, tr: 0, bl: 0, br: 0 })
 	.fillStyle(0xA48675, 0.65).fillRoundedRect(1020, 50, 300, 35, { tl: 0, tr: 0, bl: 30, br: 0 })
 	.fillStyle(0x31EB5A, 0.65).fillRoundedRect(1120, 85, 200, 30, { tl: 0, tr: 0, bl: 30, br: 0 });
+	
 	usernameTxt = this.add.text(1120, 30, "@"+profile.name, {fontSize: "40px",fontStyle: "bold"}).setOrigin(0.5)
 	.setInteractive().on('pointerdown', function(){
 	//validation & limiting renaming to once only
@@ -111,6 +112,9 @@ function create() {
 	usernameTxt.text = "@"+ newName;
 	save()
 	})
+
+	ttlClicksTxt = this.add.text(1160, 65, profile.clicks + " total clicks", {fontSize: "26px"}).setOrigin(0.5)
+
 }
 
 function update() {
@@ -153,6 +157,8 @@ function elapseFormat(hours) {
 function click(){
 	profile.clicks += minePerClick;
 	console.log(profile)
+	//update total clicks
+	ttlClicksTxt.text = profile.clicks + " total clicks";
 }
 
 function save(){
