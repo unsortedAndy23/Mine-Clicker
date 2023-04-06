@@ -23,7 +23,7 @@ const sampleProfile = {
 var game = new Phaser.Game(config);
 
 //required var
-let version = "1.1.0";
+let version = "1.1.1";
 let minePerClick = 1;
 let profile;
 let elasped;
@@ -68,8 +68,8 @@ function create() {
 
 
 	//mine button
-	this.add.graphics().fillStyle(0xC36D1D, 0.22).fillCircle(400, 300, 70).fillCircle(400, 300, 90)
-	this.mineBtn = this.add.sprite(404, 300, 'mineLogo').setScale(0.20).setInteractive()
+	this.add.graphics().fillStyle(0xC36D1D, 0.22).fillCircle(680, 300, 70).fillCircle(680, 300, 90)
+	this.mineBtn = this.add.sprite(4, 300, 'mineLogo').setScale(0.20).setInteractive()
 	.on('pointerdown', function() {
 	  this.scale -= 0.05;
 	  //add clicks
@@ -92,9 +92,9 @@ function create() {
 	this.add.text(120, 20, "v" + version, {color: '#ffffff'})
 
 	//time passed.
-	this.add.graphics().fillStyle(0x000000, 1).fillRoundedRect(260, 0, 300, 70, { tl: 0, tr: 0, bl: 30, br: 30 });
-	this.add.text(380, 25, 'Started Journey', {fontSize: "20px"}).setOrigin(0.5);
-	elasped = this.add.text(400, 50, elapseFormat(profile.hoursPassed), {fontSize: "20px",fontStyle: "bold"}).setOrigin(0.5);
+	this.add.graphics().fillStyle(0x000000, 1).fillRoundedRect(480, 0, 300, 70, { tl: 0, tr: 0, bl: 30, br: 30 });
+	this.add.text(610, 25, 'Started Journey', {fontSize: "20px"}).setOrigin(0.5);
+	elasped = this.add.text(630, 50, elapseFormat(profile.hoursPassed), {fontSize: "20px",fontStyle: "bold"}).setOrigin(0.5);
 
 }
 
