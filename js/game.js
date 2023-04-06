@@ -23,10 +23,10 @@ const sampleProfile = {
 var game = new Phaser.Game(config);
 
 //required var
-let version = "1.1.2";
+let version = "1.2.0";
 let minePerClick = 1;
 let profile;
-let elasped;
+let elaspedTxt, usernameTxt;
 
 function preload() {
 	this.load.image('background', '../assets/images/bg_cave.jpg');
@@ -94,8 +94,19 @@ function create() {
 	//time passed.
 	this.add.graphics().fillStyle(0x000000, 1).fillRoundedRect(480, 0, 300, 70, { tl: 0, tr: 0, bl: 30, br: 30 });
 	this.add.text(610, 25, 'Started Journey', {fontSize: "20px"}).setOrigin(0.5);
-	elasped = this.add.text(630, 50, elapseFormat(profile.hoursPassed), {fontSize: "20px",fontStyle: "bold"}).setOrigin(0.5);
+	elaspedTxt = this.add.text(630, 50, elapseFormat(profile.hoursPassed), {fontSize: "20px",fontStyle: "bold"}).setOrigin(0.5);
 
+	//profile
+	this.add.graphics().fillStyle(0x59463B, 0.8).fillRoundedRect(980, 10, 340, 40, { tl: 40, tr: 0, bl: 0, br: 0 })
+	.fillStyle(0xA48675, 0.65).fillRoundedRect(1020, 50, 300, 35, { tl: 0, tr: 0, bl: 30, br: 0 })
+	.fillStyle(0x31EB5A, 0.65).fillRoundedRect(1120, 85, 200, 30, { tl: 0, tr: 0, bl: 30, br: 0 });
+	usernameTxt = this.add.text(1120, 30, "@"+profile.name, {fontSize: "40px",fontStyle: "bold"}).setOrigin(0.5)
+	.setInteractive().on('pointerdown', function(){
+	//rename thingy
+	let newName = prompt("provide a new username").toString()
+	profile.name = newName;
+	usernameTxt.text = "@"+ newName;
+	})
 }
 
 function update() {
@@ -110,7 +121,7 @@ function tick(){
 	profile.hoursPassed++
 
 	//update time passed
-	elasped.text = elapseFormat(profile.hoursPassed)
+	elaspedTxt.text = elapseFormat(profile.hoursPassed)
 	console.log(profile)
 }
 
