@@ -23,7 +23,7 @@ const sampleProfile = {
 var game = new Phaser.Game(config);
 
 //required var
-let version = "1.2.0";
+let version = "1.2.1";
 let minePerClick = 1;
 let profile;
 let elaspedTxt, usernameTxt;
@@ -102,10 +102,14 @@ function create() {
 	.fillStyle(0x31EB5A, 0.65).fillRoundedRect(1120, 85, 200, 30, { tl: 0, tr: 0, bl: 30, br: 0 });
 	usernameTxt = this.add.text(1120, 30, "@"+profile.name, {fontSize: "40px",fontStyle: "bold"}).setOrigin(0.5)
 	.setInteractive().on('pointerdown', function(){
+	//validation & limiting renaming to once only
+	let newName = prompt("provide a new username").toString().trim()
+	if((newName.length>12)||newName.length == 0) return alert("Please provide a username with 12 or less characters.")
+	if(profile.name !== sampleProfile.name) return alert("Sorry! You can rename yourself only once")
 	//rename thingy
-	let newName = prompt("provide a new username").toString()
 	profile.name = newName;
 	usernameTxt.text = "@"+ newName;
+	save()
 	})
 }
 
