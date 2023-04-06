@@ -21,8 +21,8 @@ const sampleProfile = {
 
 var game = new Phaser.Game(config);
 
-
-//req var
+//required var
+let version = "1.0.1"
 let minePerClick = 1;
 let profile;
 
@@ -56,6 +56,15 @@ function create() {
 	background.setOrigin(0, 0);
 	background.setScale(this.game.config.width / background.width, this.game.config.height / background.height);
 
+	//tick timer every 3 sec.
+	this.time.addEvent({ 
+        delay: 3 * 1000,
+        callback: tick,
+        callbackScope: this,
+        loop: true
+    });
+
+
 	//mine button
 	this.add.graphics().fillStyle(0xC36D1D, 0.22).fillCircle(400, 300, 70).fillCircle(400, 300, 90)
 	this.mineBtn = this.add.sprite(404, 300, 'mineLogo').setScale(0.20).setInteractive()
@@ -74,22 +83,31 @@ function create() {
 	}).on('pointerout', function(){
 		saveTxt.setVisible(false)
 	})
-	this.add.image(this.saveBtn.x, this.saveBtn.y, 'save').setScale(0.1)
+	this.add.image(this.saveBtn.x, this.saveBtn.y, 'save').setScale(0.1);
+
+	//version
+	this.add.graphics().fillStyle(0x000000, 0.9).fillRoundedRect(100, 0, 100, 40, { tl: 0, tr: 0, bl: 12, br: 12 });
+	this.add.text(120, 20, "v" + version, {color: '#ffffff'})
 
 }
 
 function update() {
-//tick
 
+}
+
+//runs every x seconds
+function tick(){
+	//adds x clicks
+	profile.clicks += minePerClick;
+	console.log(profile)
 }
 
 function click(){
-profile.clicks += minePerClick;
-console.log(profile)
+	profile.clicks += minePerClick;
+	console.log(profile)
 }
 
 function save(){
-
 let enData = CryptoJS.AES.encrypt(JSON.stringify(profile), 'openkeyLOL').toString();
 document.cookie = "pro="+enData;
 console.log("Saved!")
