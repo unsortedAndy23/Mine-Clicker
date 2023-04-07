@@ -32,7 +32,7 @@ const sampleProfile = {
 var game = new Phaser.Game(config);
 
 //required var
-let version = "2.2.0";
+let version = "2.3.0";
 let minePerClick = 1;
 let profile;
 let elaspedTxt, usernameTxt, ttlClicksTxt, cashTxt;
@@ -90,7 +90,7 @@ function create() {
 	
 }
 
-function setState(state, homeButton){
+function setState(state, showInv, showHome ){
 	console.log("State changed to " + state)
 	//clear slate
 	for (const child of Object.values(stuff)) {
@@ -106,11 +106,24 @@ function setState(state, homeButton){
 	background.setScale(base.game.config.width / background.width, base.game.config.height / background.height);
 	
 	//home button
-	if(homeButton === true){
+	if(showHome === true){
 	stuff.homeBtn = base.add.graphics().fillStyle(0xff0000, 1).fillRoundedRect(800, 10, 100, 100, 10)
 	stuff.homeImg = base.add.image(850, 40, 'home').setScale(0.18)
 	.setInteractive().on('pointerdown', function(){return setState("home")})
 	stuff.homeTxt = base.add.text(810, 76, "Home", {fontSize: "30px",fontStyle: "bold"})
+	}
+
+	//Inventory
+	if(showInv){
+	stuff.invRect = base.add.graphics().fillStyle(0x634C46, 0.67).fillRoundedRect(1040, 140, 220, 340, { tl: 40, tr: 40, bl: 0, br: 0 })
+	stuff.invTitle = base.add.text(1070, 150, "Inventory",{fontSize: "30px"})
+	stuff.invTxt = base.add.text(1140, 200, `${profile.res.stone}\n\n${profile.res.iron}\n\n${profile.res.copper}\n\n${profile.res.gold}\n\n${profile.res.emerald}\n\n${profile.res.diamond}`,{fontSize: "24px"})
+	stuff.min1 = base.add.image(1100, 200, 'stone').setScale(0.4)
+	stuff.min2 = base.add.image(1100, 250, 'iron').setScale(0.4)
+	stuff.min3 = base.add.image(1100, 300, 'copper').setScale(0.4)
+	stuff.min4 = base.add.image(1100, 350, 'gold').setScale(0.4)
+	stuff.min5 = base.add.image(1100, 400, 'emerald').setScale(0.4)
+	stuff.min6 = base.add.image(1100, 450, 'diamond').setScale(0.4)
 	}
 
 	//save button & text
@@ -180,26 +193,17 @@ function home(){
 	//ironsmith icon
 	stuff.ironsmTxt = base.add.text(30, 230, "Ironsmith",{fontSize: "20px"})
 	stuff.ironsmBtn = base.add.rectangle(70, 180, 80, 80, 0xDEBB78).setAlpha(0.56)
-		.setInteractive().on('pointerdown', function(){setState('ironsmith', true)}).on('pointerover', function(){
+		.setInteractive().on('pointerdown', function(){setState('ironsmith', true, true)}).on('pointerover', function(){
 			stuff.ironsmTxt.setVisible(true)}).on('pointerout', function(){stuff.ironsmTxt.setVisible(false)})
 		stuff.ironsmImg = base.add.image(stuff.ironsmBtn.x, stuff.ironsmBtn.y, 'ironsmith').setScale(4);
 	
 	//shop icon
 	stuff.shopTxt = base.add.text(1080, 690, "Shop",{fontSize: "20px"})
 	stuff.shopImg = base.add.image(1180, 640, 'shop').setScale(0.3)
-		.setInteractive().on('pointerdown', function(){setState('shop', true)}).on('pointerover', function(){
+		.setInteractive().on('pointerdown', function(){setState('shop', true, true)}).on('pointerover', function(){
 			stuff.shopTxt.setVisible(true);this.setScale(0.4)}).on('pointerout', function(){stuff.shopTxt.setVisible(false);this.setScale(0.3)})
 
-	//Inventory
-	stuff.invRect = base.add.graphics().fillStyle(0x634C46, 0.67).fillRoundedRect(1040, 140, 220, 340, { tl: 40, tr: 40, bl: 0, br: 0 })
-	stuff.invTitle = base.add.text(1070, 150, "Inventory",{fontSize: "30px"})
-	stuff.invTxt = base.add.text(1140, 200, `${profile.res.stone}\n\n${profile.res.iron}\n\n${profile.res.copper}\n\n${profile.res.gold}\n\n${profile.res.emerald}\n\n${profile.res.diamond}`,{fontSize: "24px"})
-	stuff.min1 = base.add.image(1100, 200, 'stone').setScale(0.4)
-	stuff.min2 = base.add.image(1100, 250, 'iron').setScale(0.4)
-	stuff.min3 = base.add.image(1100, 300, 'copper').setScale(0.4)
-	stuff.min4 = base.add.image(1100, 350, 'gold').setScale(0.4)
-	stuff.min5 = base.add.image(1100, 400, 'emerald').setScale(0.4)
-	stuff.min6 = base.add.image(1100, 450, 'diamond').setScale(0.4)
+
 }
 
 //shop page
@@ -248,10 +252,30 @@ function transact(money){
 
 function click(){
 	profile.clicks += minePerClick;
-	updateInv()
+	mine()
 	console.log(profile)
 	//update total clicks
 	ttlClicksTxt.text = profile.clicks + " total clicks";
+}
+
+function mine(){
+	if(Math.random() < 0.4){
+		let res = profile.res
+		//if the mining is successful
+		let chance = Math.random();
+		if (chance <= 0.5) res.stone++; //50%
+		else if (chance <= 0.8) res.iron++; //30%
+		else if (chance <= 0.915) res.copper++; //11.5%
+		else if (chance <= 0.975) res.gold++; //5%
+		else if (chance <= 0.995) res.emerald++; //1.5%
+		else res.diamond++; //0.5%
+	
+	return 	updateInv()
+	}else{
+		//give x $ to user if not successful
+		profile.balance += 1;
+		cashTxt.text = `${profile.balance} $`
+	}
 }
 
 function updateInv(){
