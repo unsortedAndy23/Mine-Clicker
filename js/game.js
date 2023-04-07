@@ -32,10 +32,10 @@ const sampleProfile = {
 var game = new Phaser.Game(config);
 
 //required var
-let version = "1.5.0";
+let version = "1.6.0";
 let minePerClick = 1;
 let profile;
-let elaspedTxt, usernameTxt, ttlClicksTxt, cashTxt;
+let elaspedTxt, usernameTxt, ttlClicksTxt, cashTxt, invTxt;
 let gameState = 'home'
 //states :- 'home', 'shop', 'ironsmith', 'linkedin', 'antiques'
 
@@ -45,6 +45,14 @@ function preload() {
 	this.load.image('save','../assets/images/save.png');
 	this.load.image('ironsmith','../assets/images/ironsmith.png');
 	this.load.image('shop','../assets/images/shop.png');
+
+	//loading minerals
+	this.load.image('stone','../assets/images/minerals/stone.png');
+	this.load.image('iron','../assets/images/minerals/iron.png');
+	this.load.image('copper','../assets/images/minerals/copper.png');
+	this.load.image('gold','../assets/images/minerals/gold.png');
+	this.load.image('emerald','../assets/images/minerals/emerald.png');
+	this.load.image('diamond','../assets/images/minerals/diamond.png');
 
 	
 	if(document.cookie){
@@ -142,6 +150,16 @@ if(gameState==='home'){
 		.setInteractive().on('pointerdown', function(){gameState='shop'}).on('pointerover', function(){
 		shopTxt.setVisible(true);this.setScale(0.4)}).on('pointerout', function(){shopTxt.setVisible(false);this.setScale(0.3)})
 
+	//Inventory
+	this.add.graphics().fillStyle(0x634C46, 0.67).fillRoundedRect(1040, 140, 220, 340, { tl: 40, tr: 40, bl: 0, br: 0 })
+	this.add.text(1070, 150, "Inventory",{fontSize: "30px"})
+	invTxt = this.add.text(1140, 200, `${profile.res.stone}\n\n${profile.res.iron}\n\n${profile.res.copper}\n\n${profile.res.gold}\n\n${profile.res.emerald}\n\n${profile.res.diamond}`,{fontSize: "24px"})
+	this.add.image(1100, 200, 'stone').setScale(0.4)
+	this.add.image(1100, 250, 'iron').setScale(0.4)
+	this.add.image(1100, 300, 'copper').setScale(0.4)
+	this.add.image(1100, 350, 'gold').setScale(0.4)
+	this.add.image(1100, 400, 'emerald').setScale(0.4)
+	this.add.image(1100, 450, 'diamond').setScale(0.4)
 }
 	
 
@@ -195,9 +213,15 @@ function transact(money){
 
 function click(){
 	profile.clicks += minePerClick;
+	updateInv()
 	console.log(profile)
 	//update total clicks
 	ttlClicksTxt.text = profile.clicks + " total clicks";
+}
+
+function updateInv(){
+	let min = profile.res
+	invTxt.text = `${min.stone}\n\n${min.iron}\n\n${min.copper}\n\n${min.gold}\n\n${min.emerald}\n\n${min.diamond}`
 }
 
 function save(){
