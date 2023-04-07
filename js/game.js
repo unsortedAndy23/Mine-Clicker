@@ -32,7 +32,7 @@ const sampleProfile = {
 var game = new Phaser.Game(config);
 
 //required var
-let version = "2.0.0";
+let version = "2.1.0";
 let minePerClick = 1;
 let profile;
 let elaspedTxt, usernameTxt, ttlClicksTxt, cashTxt;
