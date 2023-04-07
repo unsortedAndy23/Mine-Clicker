@@ -24,10 +24,12 @@ const sampleProfile = {
 var game = new Phaser.Game(config);
 
 //required var
-let version = "1.3.1";
+let version = "1.3.2";
 let minePerClick = 1;
 let profile;
 let elaspedTxt, usernameTxt, ttlClicksTxt, cashTxt;
+let gameState = 'home'
+//states :- 'home', 'shop', 'ironsmith', 'linkedin', 'antiques'
 
 function preload() {
 	this.load.image('background', '../assets/images/bg_cave.jpg');
@@ -66,8 +68,45 @@ function create() {
         callbackScope: this,
         loop: true
     });
-
-
+	
+	
+		//save button & text
+		let saveTxt = this.add.text(30, 70, "Save")
+		this.saveBtn = this.add.rectangle(50, 50, 40, 40, 0xDBB941).setAlpha(0.7)
+		.setInteractive().on('pointerdown', save).on('pointerover', function(){
+			saveTxt.setVisible(true)
+		}).on('pointerout', function(){
+			saveTxt.setVisible(false)
+		})
+		this.add.image(this.saveBtn.x, this.saveBtn.y, 'save').setScale(0.1);
+	
+		//version
+		this.add.graphics().fillStyle(0x000000, 0.9).fillRoundedRect(100, 0, 100, 40, { tl: 0, tr: 0, bl: 12, br: 12 });
+		this.add.text(120, 20, "v" + version, {color: '#ffffff'})
+	
+		//time passed.
+		this.add.graphics().fillStyle(0x000000, 1).fillRoundedRect(480, 0, 300, 70, { tl: 0, tr: 0, bl: 30, br: 30 });
+		this.add.text(610, 25, 'Started Journey', {fontSize: "20px"}).setOrigin(0.5);
+		elaspedTxt = this.add.text(630, 50, elapseFormat(profile.hoursPassed), {fontSize: "20px",fontStyle: "bold"}).setOrigin(0.5);
+	
+		//profile
+		this.add.graphics().fillStyle(0x59463B, 0.8).fillRoundedRect(980, 10, 340, 40, { tl: 40, tr: 0, bl: 0, br: 0 })
+		.fillStyle(0xA48675, 0.65).fillRoundedRect(1020, 50, 300, 35, { tl: 0, tr: 0, bl: 30, br: 0 })
+		.fillStyle(0x31EB5A, 0.65).fillRoundedRect(1120, 85, 200, 30, { tl: 0, tr: 0, bl: 30, br: 0 });
+		
+		usernameTxt = this.add.text(1120, 30, "@"+profile.name, {fontSize: "40px",fontStyle: "bold"}).setOrigin(0.5)
+		.setInteractive().on('pointerdown', function(){
+		//validation & limiting renaming to once only
+		let newName = prompt("provide a new username").toString().trim()
+		if((newName.length>12)||newName.length == 0) return alert("Please provide a username with 12 or less characters.")
+		if(profile.name !== sampleProfile.name) return alert("Sorry! You can rename yourself only once")
+		if(newName == sampleProfile.name) return alert("What's the point of renaming then?!?!")
+		//rename thingy
+		profile.name = newName;
+		usernameTxt.text = "@"+ newName;
+		save()
+		})
+if(gameState==='home'){
 	//mine button
 	this.add.graphics().fillStyle(0xC36D1D, 0.22).fillCircle(680, 300, 70).fillCircle(680, 300, 90)
 	this.mineBtn = this.add.sprite(684, 300, 'mineLogo').setScale(0.20).setInteractive()
@@ -77,43 +116,8 @@ function create() {
 	  click()	
 	  setTimeout(() => {this.scale += 0.05;}, 100);
 	});
-
-	//save button & text
-	let saveTxt = this.add.text(30, 70, "Save")
-	this.saveBtn = this.add.rectangle(50, 50, 40, 40, 0xDBB941).setAlpha(0.7)
-	.setInteractive().on('pointerdown', save).on('pointerover', function(){
-		saveTxt.setVisible(true)
-	}).on('pointerout', function(){
-		saveTxt.setVisible(false)
-	})
-	this.add.image(this.saveBtn.x, this.saveBtn.y, 'save').setScale(0.1);
-
-	//version
-	this.add.graphics().fillStyle(0x000000, 0.9).fillRoundedRect(100, 0, 100, 40, { tl: 0, tr: 0, bl: 12, br: 12 });
-	this.add.text(120, 20, "v" + version, {color: '#ffffff'})
-
-	//time passed.
-	this.add.graphics().fillStyle(0x000000, 1).fillRoundedRect(480, 0, 300, 70, { tl: 0, tr: 0, bl: 30, br: 30 });
-	this.add.text(610, 25, 'Started Journey', {fontSize: "20px"}).setOrigin(0.5);
-	elaspedTxt = this.add.text(630, 50, elapseFormat(profile.hoursPassed), {fontSize: "20px",fontStyle: "bold"}).setOrigin(0.5);
-
-	//profile
-	this.add.graphics().fillStyle(0x59463B, 0.8).fillRoundedRect(980, 10, 340, 40, { tl: 40, tr: 0, bl: 0, br: 0 })
-	.fillStyle(0xA48675, 0.65).fillRoundedRect(1020, 50, 300, 35, { tl: 0, tr: 0, bl: 30, br: 0 })
-	.fillStyle(0x31EB5A, 0.65).fillRoundedRect(1120, 85, 200, 30, { tl: 0, tr: 0, bl: 30, br: 0 });
+}
 	
-	usernameTxt = this.add.text(1120, 30, "@"+profile.name, {fontSize: "40px",fontStyle: "bold"}).setOrigin(0.5)
-	.setInteractive().on('pointerdown', function(){
-	//validation & limiting renaming to once only
-	let newName = prompt("provide a new username").toString().trim()
-	if((newName.length>12)||newName.length == 0) return alert("Please provide a username with 12 or less characters.")
-	if(profile.name !== sampleProfile.name) return alert("Sorry! You can rename yourself only once")
-	if(newName == sampleProfile.name) return alert("What's the point of renaming then?!?!")
-	//rename thingy
-	profile.name = newName;
-	usernameTxt.text = "@"+ newName;
-	save()
-	})
 
 	ttlClicksTxt = this.add.text(1160, 65, profile.clicks + " total clicks", {fontSize: "26px"}).setOrigin(0.5)
 	cashTxt = this.add.text(1180, 100, profile.balance + " $", {fontSize: "26px", fontStyle:"bold", fill:'#0F710D'}).setOrigin(0.5)
