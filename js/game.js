@@ -3,8 +3,8 @@ var config = {
 	scale: {
 		mode: Phaser.Scale.FIT,
 		autoCenter: Phaser.Scale.CENTER_BOTH,
-		width: window.innerWidth,
-		height: window.innerHeight
+		width: 1280,
+		height: 720
 	},
 	scene: {
 		preload: preload,
@@ -23,7 +23,7 @@ const sampleProfile = {
 var game = new Phaser.Game(config);
 
 //required var
-let version = "1.2.2";
+let version = "1.3.0";
 let minePerClick = 1;
 let profile;
 let elaspedTxt, usernameTxt, ttlClicksTxt;
