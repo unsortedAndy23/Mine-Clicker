@@ -32,7 +32,7 @@ const sampleProfile = {
 var game = new Phaser.Game(config);
 
 //required var
-let version = "2.3.0";
+let version = "2.3.1";
 let minePerClick = 1;
 let profile;
 let elaspedTxt, usernameTxt, ttlClicksTxt, cashTxt;
@@ -77,7 +77,7 @@ function create() {
 	//assigning base its value
 	
 	base = this;
-	setState("home")
+	setState("home", true)
 	
 	
 	//tick timer every 3 sec.
@@ -181,8 +181,8 @@ function update() {
 //home page
 function home(){
 	//mine button
-	stuff.mineBg = base.add.graphics().fillStyle(0xC36D1D, 0.22).fillCircle(680, 300, 70).fillCircle(680, 300, 90)
-	stuff.mineBtn = base.add.sprite(684, 300, 'mineLogo').setScale(0.20).setInteractive()
+	stuff.mineBg = base.add.graphics().fillStyle(0xC36D1D, 0.22).fillCircle(680, 300, 100).fillCircle(680, 300, 120)
+	stuff.mineBtn = base.add.sprite(684, 300, 'mineLogo').setScale(0.4).setInteractive()
 	.on('pointerdown', function() {
 	  this.scale -= 0.05;
 	  //add clicks
