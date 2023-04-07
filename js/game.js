@@ -24,7 +24,7 @@ const sampleProfile = {
 var game = new Phaser.Game(config);
 
 //required var
-let version = "1.3.2";
+let version = "1.4.0";
 let minePerClick = 1;
 let profile;
 let elaspedTxt, usernameTxt, ttlClicksTxt, cashTxt;
@@ -35,6 +35,8 @@ function preload() {
 	this.load.image('background', '../assets/images/bg_cave.jpg');
 	this.load.image('mineLogo', '../assets/images/mine.png');
 	this.load.image('save','../assets/images/save.png');
+	this.load.image('ironsmith','../assets/images/ironsmith.png');
+	this.load.image('shop','../assets/images/shop.png');
 
 	
 	if(document.cookie){
@@ -106,6 +108,8 @@ function create() {
 		usernameTxt.text = "@"+ newName;
 		save()
 		})
+
+
 if(gameState==='home'){
 	//mine button
 	this.add.graphics().fillStyle(0xC36D1D, 0.22).fillCircle(680, 300, 70).fillCircle(680, 300, 90)
@@ -116,6 +120,20 @@ if(gameState==='home'){
 	  click()	
 	  setTimeout(() => {this.scale += 0.05;}, 100);
 	});
+
+	//ironsmith icon
+	let ironsmTxt = this.add.text(30, 230, "Ironsmith",{fontSize: "20px"})
+		this.ironsBtn = this.add.rectangle(70, 180, 80, 80, 0xDEBB78).setAlpha(0.56)
+		.setInteractive().on('pointerdown', function(){gameState='ironsmith'}).on('pointerover', function(){
+		ironsmTxt.setVisible(true)}).on('pointerout', function(){ironsmTxt.setVisible(false)})
+		this.add.image(this.ironsBtn.x, this.ironsBtn.y, 'ironsmith').setScale(4);
+	
+	//shop icon
+	let shopTxt = this.add.text(1080, 690, "Shop",{fontSize: "20px"})
+		let shopImg = this.add.image(1180, 640, 'shop').setScale(0.3)
+		.setInteractive().on('pointerdown', function(){gameState='shop'}).on('pointerover', function(){
+		shopTxt.setVisible(true);this.setScale(0.4)}).on('pointerout', function(){shopTxt.setVisible(false);this.setScale(0.3)})
+
 }
 	
 
