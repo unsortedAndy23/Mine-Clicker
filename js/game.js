@@ -18,13 +18,21 @@ const sampleProfile = {
 	name: "guest",
 	clicks: 0,
 	balance: 0,
-	hoursPassed: 0
+	hoursPassed: 0,
+	res:{
+		stone: 0,
+		iron: 0,
+		copper: 0,
+		gold: 0,
+		emerald: 0,
+		diamond: 0
+	}
 }
 
 var game = new Phaser.Game(config);
 
 //required var
-let version = "1.4.0";
+let version = "1.5.0";
 let minePerClick = 1;
 let profile;
 let elaspedTxt, usernameTxt, ttlClicksTxt, cashTxt;
