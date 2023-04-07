@@ -32,7 +32,7 @@ const sampleProfile = {
 var game = new Phaser.Game(config);
 
 //required var
-let version = "2.1.1";
+let version = "2.2.0";
 let minePerClick = 1;
 let profile;
 let elaspedTxt, usernameTxt, ttlClicksTxt, cashTxt;
@@ -44,6 +44,7 @@ function preload() {
 	this.load.image('save','../assets/images/save.png');
 	this.load.image('ironsmith','../assets/images/ironsmith.png');
 	this.load.image('shop','../assets/images/shop.png');
+	this.load.image('home','../assets/images/home.png');
 	
 	//loading minerals
 	this.load.image('stone','../assets/images/minerals/stone.png');
@@ -76,7 +77,6 @@ function create() {
 	//assigning base its value
 	
 	base = this;
-	loadDef()
 	setState("home")
 	
 	
@@ -90,11 +90,14 @@ function create() {
 	
 }
 
-function loadDef(){
+function setState(state, homeButton){
+	console.log("State changed to " + state)
 	//clear slate
-	for(child in stuff){
-	if (child instanceof Phaser.GameObjects.Graphics || child instanceof Phaser.GameObjects.Image || child instanceof Phaser.GameObjects.Sprite || child instanceof Phaser.GameObjects.Text) {
-			child.destroy();}}
+	for (const child of Object.values(stuff)) {
+			child.destroy();
+			delete stuff[child]
+	}
+		console.log(stuff)	
 
 /* COMMON THINGS IN ALL THE GAME STATES */
 	//adding background
@@ -102,6 +105,14 @@ function loadDef(){
 	background.setOrigin(0, 0);
 	background.setScale(base.game.config.width / background.width, base.game.config.height / background.height);
 	
+	//home button
+	if(homeButton === true){
+	stuff.homeBtn = base.add.graphics().fillStyle(0xff0000, 1).fillRoundedRect(800, 10, 100, 100, 10)
+	stuff.homeImg = base.add.image(850, 40, 'home').setScale(0.18)
+	.setInteractive().on('pointerdown', function(){return setState("home")})
+	stuff.homeTxt = base.add.text(810, 76, "Home", {fontSize: "30px",fontStyle: "bold"})
+	}
+
 	//save button & text
 	let saveTxt = base.add.text(30, 70, "Save")
 	base.saveBtn = base.add.rectangle(50, 50, 40, 40, 0xDBB941).setAlpha(0.7)
@@ -141,23 +152,20 @@ function loadDef(){
 	
 	ttlClicksTxt = base.add.text(1160, 65, profile.clicks + " total clicks", {fontSize: "26px"}).setOrigin(0.5)
 	cashTxt = base.add.text(1180, 100, profile.balance + " $", {fontSize: "26px", fontStyle:"bold", fill:'#0F710D'}).setOrigin(0.5)
-}
 
-function setState(state){
-	console.log("State changed to " + state)
-	//clean the canvas
-	loadDef()	
-	
 	//states :- 'home', 'shop', 'ironsmith', 'linkedin', 'antiques'
-	if(state === 'home') home();
-	else if(state === 'shop') return;//shop
+	if((!state) || (state === 'home')) home();
+	else if(state === 'shop') shop();//shop
 	else if(state === 'ironsmith') return; //ironsmith
 }
+
+
 
 function update() {
 	
 }
 
+//home page
 function home(){
 	//mine button
 	stuff.mineBg = base.add.graphics().fillStyle(0xC36D1D, 0.22).fillCircle(680, 300, 70).fillCircle(680, 300, 90)
@@ -172,14 +180,14 @@ function home(){
 	//ironsmith icon
 	stuff.ironsmTxt = base.add.text(30, 230, "Ironsmith",{fontSize: "20px"})
 	stuff.ironsmBtn = base.add.rectangle(70, 180, 80, 80, 0xDEBB78).setAlpha(0.56)
-		.setInteractive().on('pointerdown', function(){setState('ironsmith')}).on('pointerover', function(){
+		.setInteractive().on('pointerdown', function(){setState('ironsmith', true)}).on('pointerover', function(){
 			stuff.ironsmTxt.setVisible(true)}).on('pointerout', function(){stuff.ironsmTxt.setVisible(false)})
 		stuff.ironsmImg = base.add.image(stuff.ironsmBtn.x, stuff.ironsmBtn.y, 'ironsmith').setScale(4);
 	
 	//shop icon
 	stuff.shopTxt = base.add.text(1080, 690, "Shop",{fontSize: "20px"})
 	stuff.shopImg = base.add.image(1180, 640, 'shop').setScale(0.3)
-		.setInteractive().on('pointerdown', function(){setState('shop')}).on('pointerover', function(){
+		.setInteractive().on('pointerdown', function(){setState('shop', true)}).on('pointerover', function(){
 			stuff.shopTxt.setVisible(true);this.setScale(0.4)}).on('pointerout', function(){stuff.shopTxt.setVisible(false);this.setScale(0.3)})
 
 	//Inventory
@@ -192,6 +200,11 @@ function home(){
 	stuff.min4 = base.add.image(1100, 350, 'gold').setScale(0.4)
 	stuff.min5 = base.add.image(1100, 400, 'emerald').setScale(0.4)
 	stuff.min6 = base.add.image(1100, 450, 'diamond').setScale(0.4)
+}
+
+//shop page
+function shop(){
+
 }
 
 //runs every x seconds
