@@ -17,16 +17,17 @@ var config = {
 const sampleProfile = {
 	name: "guest",
 	clicks: 0,
+	balance: 0,
 	hoursPassed: 0
 }
 
 var game = new Phaser.Game(config);
 
 //required var
-let version = "1.3.0";
+let version = "1.3.1";
 let minePerClick = 1;
 let profile;
-let elaspedTxt, usernameTxt, ttlClicksTxt;
+let elaspedTxt, usernameTxt, ttlClicksTxt, cashTxt;
 
 function preload() {
 	this.load.image('background', '../assets/images/bg_cave.jpg');
@@ -107,6 +108,7 @@ function create() {
 	let newName = prompt("provide a new username").toString().trim()
 	if((newName.length>12)||newName.length == 0) return alert("Please provide a username with 12 or less characters.")
 	if(profile.name !== sampleProfile.name) return alert("Sorry! You can rename yourself only once")
+	if(newName == sampleProfile.name) return alert("What's the point of renaming then?!?!")
 	//rename thingy
 	profile.name = newName;
 	usernameTxt.text = "@"+ newName;
@@ -114,6 +116,7 @@ function create() {
 	})
 
 	ttlClicksTxt = this.add.text(1160, 65, profile.clicks + " total clicks", {fontSize: "26px"}).setOrigin(0.5)
+	cashTxt = this.add.text(1180, 100, profile.balance + " $", {fontSize: "26px", fontStyle:"bold", fill:'#0F710D'}).setOrigin(0.5)
 
 }
 
@@ -153,6 +156,12 @@ function elapseFormat(hours) {
 	return output.trim();
   }
   
+function transact(money){
+	//add or remove money
+	profile.balance += (money || 0);
+	console.log(profile.balance)
+	cashTxt.text = profile.balance + " $"
+}
 
 function click(){
 	profile.clicks += minePerClick;
