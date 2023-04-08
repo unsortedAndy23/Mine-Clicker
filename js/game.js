@@ -26,6 +26,14 @@ const sampleProfile = {
 		gold: 0,
 		emerald: 0,
 		diamond: 0
+	},
+	antiques:{
+		teapot: 0, //iron
+		ring: 0, //gold & diamond
+		globe: 0, //stone & copper
+		sword: 0, //iron & copper
+		wand: 0, //gold and emerald
+		crown: 0 //gold, emerald & diamond
 	}
 }
 
@@ -34,7 +42,7 @@ let orePrice = [2, 4, 5, 10, 15, 22]
 var game = new Phaser.Game(config);
 
 //required var
-let version = "3.2.1";
+let version = "3.2.2";
 let minePerClick = 1;
 let profile;
 let elaspedTxt, usernameTxt, ttlClicksTxt, cashTxt;
@@ -317,7 +325,8 @@ function mine(){
 		else if (chance <= 0.915) res.copper++; //11.5%
 		else if (chance <= 0.975) res.gold++; //5%
 		else if (chance <= 0.995) res.emerald++; //1.5%
-		else res.diamond++; //0.5%
+		else if (chance <= 0.998) res.diamond++; //0.3%
+		else return makeAntique(); //antique pieces
 	
 	return 	updateInv()
 	}else{
@@ -337,4 +346,11 @@ function save(){
 let enData = CryptoJS.AES.encrypt(JSON.stringify(profile), 'openkeyLOL').toString();
 document.cookie = "pro="+enData;
 console.log("Saved!")
+}
+
+function makeAntique(name){
+	let antiqList = Object.keys(profile.antiques)
+	if(!name) return profile.antiques[antiqList[Math.floor(Math.random() * antiqList.length)]]++;
+
+return profile.antiques[name] ++;
 }
