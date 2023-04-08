@@ -32,7 +32,7 @@ const sampleProfile = {
 var game = new Phaser.Game(config);
 
 //required var
-let version = "2.3.1";
+let version = "2.3.2";
 let minePerClick = 1;
 let profile;
 let elaspedTxt, usernameTxt, ttlClicksTxt, cashTxt;
@@ -259,7 +259,7 @@ function click(){
 }
 
 function mine(){
-	if(Math.random() < 0.4){
+	if(Math.random() < 0.3){
 		let res = profile.res
 		//if the mining is successful
 		let chance = Math.random();
@@ -273,7 +273,7 @@ function mine(){
 	return 	updateInv()
 	}else{
 		//give x $ to user if not successful
-		profile.balance += 1;
+		profile.balance += (Math.random()< 0.6) ? 1 : 0;
 		cashTxt.text = `${profile.balance} $`
 	}
 }
