@@ -34,7 +34,7 @@ let orePrice = [2, 4, 5, 10, 15, 22]
 var game = new Phaser.Game(config);
 
 //required var
-let version = "3.1.0";
+let version = "3.2.0";
 let minePerClick = 1;
 let profile;
 let elaspedTxt, usernameTxt, ttlClicksTxt, cashTxt;
@@ -57,7 +57,7 @@ function preload() {
 	this.load.image('diamond','../assets/images/minerals/diamond.png');
 	
 	
-	if(document.cookie){
+	if(document.cookie && !document.cookie.startsWith("pro=clear")){
 		
 		//loading existing profile from cookie
 		let deData = CryptoJS.AES.decrypt((document.cookie).substring(4), 'openkeyLOL').toString(CryptoJS.enc.Utf8)
@@ -138,6 +138,15 @@ function setState(state, showInv, showHome ){
 	})
 	base.add.image(base.saveBtn.x, base.saveBtn.y, 'save').setScale(0.1);
 	
+	//temporary delete data button (for dev purpose)
+	base.delBtn = base.add.rectangle(300, 50, 180, 60, 0xff0000).setAlpha(0.7)
+	.setInteractive().on('pointerdown', function(){
+		document.cookie = "pro=clear";
+		console.log(document.cookie)
+		location.reload(true)
+	})
+	base.delTxt = base.add.text(220, 30, "DELETE!", {fontSize: "36px"})
+
 	//version
 	base.add.graphics().fillStyle(0x000000, 0.9).fillRoundedRect(100, 0, 100, 40, { tl: 0, tr: 0, bl: 12, br: 12 });
 	base.add.text(120, 20, "v" + version, {color: '#ffffff'})
