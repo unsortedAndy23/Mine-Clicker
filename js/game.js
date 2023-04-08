@@ -34,7 +34,7 @@ let orePrice = [2, 4, 5, 10, 15, 22]
 var game = new Phaser.Game(config);
 
 //required var
-let version = "3.0.1";
+let version = "3.1.0";
 let minePerClick = 1;
 let profile;
 let elaspedTxt, usernameTxt, ttlClicksTxt, cashTxt;
@@ -212,7 +212,9 @@ function home(){
 //shop page
 function shop(){
 	console.log("Welcome to shop")
-	stuff.slots = base.add.graphics()
+	stuff.slots = base.add.graphics().fillStyle(0x59463B)
+	.fillRoundedRect(160, 50, 280, 80, 10)
+	stuff.sellTxt = base.add.text(180, 70, "SELL" , {fontSize:"40px", fontStyle:"bold"})
 	res = Object.keys(sampleProfile.res)
 	let no = 0;
 	i = 160;
@@ -231,9 +233,19 @@ function shop(){
 				setState("shop", true, true)
 			}
 		});
-		stuff[res[no]+"sAllBox"] = base.add.rectangle(i+90, 280,50,20, 0x9e6c33).setOrigin(0.5);
-		stuff[res[no]+"sOneTxt"] = base.add.text(i+30, 280,`ONE\n${orePrice[no]} $`).setOrigin(0.5)
-		stuff[res[no]+"sAllTxt"] = base.add.text(i+90, 280,`MAX\n${profile.res[res[no]] * orePrice[no]} $`).setOrigin(0.5)
+		stuff[res[no]+"sAllBox"] = base.add.rectangle(i+90, 280,50,20, 0x9e6c33).setOrigin(0.5)
+		.setInteractive().on('pointerdown', function(){
+			let item = Object.keys(stuff).find(key => stuff[key] === this).slice(0, -7);
+			console.log(profile.res[item])
+			if(profile.res[item] > 0){
+				let amt = profile.res[item]
+				updateInv(item, -(amt));
+				transact(amt * orePrice[res.indexOf(item)])
+				setState("shop", true, true)
+			}
+		});
+		stuff[res[no]+"sOneTxt"] = base.add.text(i+30, 295,`ONE\n\n${orePrice[no]} $`).setOrigin(0.5)
+		stuff[res[no]+"sAllTxt"] = base.add.text(i+90, 295,`MAX\n\n${profile.res[res[no]] * orePrice[no]} $`).setOrigin(0.5)
 		no++
 		i += 140
 	}
