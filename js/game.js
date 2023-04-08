@@ -34,7 +34,7 @@ let orePrice = [2, 4, 5, 10, 15, 22]
 var game = new Phaser.Game(config);
 
 //required var
-let version = "3.0.0";
+let version = "3.0.1";
 let minePerClick = 1;
 let profile;
 let elaspedTxt, usernameTxt, ttlClicksTxt, cashTxt;
@@ -188,9 +188,10 @@ function home(){
 	.on('pointerdown', function() {
 	  this.scale -= 0.05;
 	  //add clicks
-	  click()	
-	  setTimeout(() => {this.scale += 0.05;}, 100);
-	});
+	  click()
+	}).on('pointerup', function() {
+		this.scale = 0.4;
+	  });
 
 	//ironsmith icon
 	stuff.ironsmTxt = base.add.text(30, 230, "Ironsmith",{fontSize: "20px"})
