@@ -34,7 +34,7 @@ let orePrice = [2, 4, 5, 10, 15, 22]
 var game = new Phaser.Game(config);
 
 //required var
-let version = "3.2.0";
+let version = "3.2.1";
 let minePerClick = 1;
 let profile;
 let elaspedTxt, usernameTxt, ttlClicksTxt, cashTxt;
@@ -109,9 +109,9 @@ function setState(state, showInv, showHome ){
 	
 	//home button
 	if(showHome === true){
-	stuff.homeBtn = base.add.graphics().fillStyle(0xff0000, 1).fillRoundedRect(800, 10, 100, 100, 10)
+	stuff.homeBtn = base.add.rectangle(850, 60, 100, 100, 0xff0000)
+	.setInteractive().on('pointerdown', function(){return setState("home",true)})
 	stuff.homeImg = base.add.image(850, 40, 'home').setScale(0.18)
-	.setInteractive().on('pointerdown', function(){return setState("home")})
 	stuff.homeTxt = base.add.text(810, 76, "Home", {fontSize: "30px",fontStyle: "bold"})
 	}
 
@@ -253,7 +253,7 @@ function shop(){
 				setState("shop", true, true)
 			}
 		});
-		stuff[res[no]+"sOneTxt"] = base.add.text(i+30, 295,`ONE\n\n${orePrice[no]} $`).setOrigin(0.5)
+		stuff[res[no]+"sOneTxt"] = base.add.text(i+30, 295,`ONE\n\n${profile.res[res[no]] ? orePrice[no] : 0} $`).setOrigin(0.5)
 		stuff[res[no]+"sAllTxt"] = base.add.text(i+90, 295,`MAX\n\n${profile.res[res[no]] * orePrice[no]} $`).setOrigin(0.5)
 		no++
 		i += 140
