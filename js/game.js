@@ -42,7 +42,7 @@ let orePrice = [2, 4, 5, 10, 15, 22]
 var game = new Phaser.Game(config);
 
 //required var
-let version = "3.2.2";
+let version = "3.2.3";
 let minePerClick = 1;
 let profile;
 let elaspedTxt, usernameTxt, ttlClicksTxt, cashTxt;
@@ -54,6 +54,7 @@ function preload() {
 	this.load.image('save','../assets/images/save.png');
 	this.load.image('ironsmith','../assets/images/ironsmith.png');
 	this.load.image('shop','../assets/images/shop.png');
+	this.load.image('work','../assets/images/work.png');
 	this.load.image('home','../assets/images/home.png');
 	
 	//loading minerals
@@ -189,6 +190,7 @@ function setState(state, showInv, showHome ){
 	if((!state) || (state === 'home')) home();
 	else if(state === 'shop') shop();//shop
 	else if(state === 'ironsmith') return; //ironsmith
+	else if(state === 'ironsmith') return; //ironsmith
 }
 
 
@@ -223,7 +225,11 @@ function home(){
 		.setInteractive().on('pointerdown', function(){setState('shop', true, true)}).on('pointerover', function(){
 			stuff.shopTxt.setVisible(true);this.setScale(0.4)}).on('pointerout', function(){stuff.shopTxt.setVisible(false);this.setScale(0.3)})
 
-
+	//workers icon
+	stuff.workTxt = base.add.text(60, 690, "Workers",{fontSize: "20px"})
+	stuff.workImg = base.add.image(100, 640, 'work').setScale(.8)
+		.setInteractive().on('pointerdown', function(){setState('work', true, true)}).on('pointerover', function(){
+			stuff.workTxt.setVisible(true);this.setScale(0.7)}).on('pointerout', function(){stuff.workTxt.setVisible(false);this.setScale(0.8)})
 }
 
 //shop page
