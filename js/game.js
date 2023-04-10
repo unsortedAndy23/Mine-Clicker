@@ -47,10 +47,12 @@ const sampleProfile = {
 
 //ore price list
 let orePrice = [2, 4, 5, 10, 15, 22]
+let workerCost = [30, 60, 100, 200, 350, 700];
+let workerMines = [1, 2, 3, 4, 4, 6];
 var game = new Phaser.Game(config);
 
 //required var
-let version = "3.2.4";
+let version = "3.3.0";
 let minePerClick = 1;
 let profile;
 let elaspedTxt, usernameTxt, ttlClicksTxt, cashTxt;
@@ -245,6 +247,31 @@ function home(){
 	stuff.workImg = base.add.image(100, 640, 'work').setScale(.8)
 		.setInteractive().on('pointerdown', function(){setState('work', true, true)}).on('pointerover', function(){
 			stuff.workTxt.setVisible(true);this.setScale(0.7)}).on('pointerout', function(){stuff.workTxt.setVisible(false);this.setScale(0.8)})
+
+	//workers list
+	stuff.wlistBox = base.add.rectangle(760, 636, 540, 170, 0xB18875);
+	stuff.wListTtl = base.add.graphics().fillStyle(0x6D3B24, 0.4)
+	.fillRoundedRect(490, 510, 380, 40, { tl: 30, tr: 0, bl: 0, br: 0 })
+	.fillStyle(0x000000)
+	.fillRoundedRect(800, 510, 230, 40, { tl: 0, tr: 30, bl: 0, br: 0 })
+	let pos = [{x:530, y: 590}, {x:710, y: 590}, {x:890, y: 590},
+		{x:530, y: 670}, {x:710, y: 670}, {x:890, y: 670}];
+		stuff.workers = {imgs: [], txts: [], costs: []}
+		let workNames = Object.keys(profile.workers);
+		let ttlMines = 0;
+		for(let po in pos){
+			let index = pos.indexOf(pos[po]);
+			if(profile.workers[workNames[index]] === true){
+				stuff.workers.imgs.push(base.add.image(pos[po].x, pos[po].y, workNames[index]).setScale(0.6))
+				stuff.workers.txts.push(base.add.text(pos[po].x+ 38, pos[po].y - 20, workNames[index], {fontStyle:"bold", fontSize: "22px"}))
+				stuff.workers.costs.push(base.add.text(pos[po].x+ 34, pos[po].y, `+${workerMines[index]} mines/hr`))
+				ttlMines = workerMines[index];
+			}else {
+				stuff.workers.imgs.push(base.add.rectangle(pos[po].x, pos[po].y, 60, 60, 0xFFFFFF));
+				stuff.workers.txts.push(base.add.text(pos[po].x+ 38, pos[po].y - 20, "???", {fontStyle:"bold", fontSize: "22px"}))
+			}
+		}
+		stuff.wListTxt = base.add.text(500, 520, `Hired Workers		  +${ttlMines} mines/hr`, {fontSize: "30px", fontStyle:"bold"})
 }
 
 //shop page
