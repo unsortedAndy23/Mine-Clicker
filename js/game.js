@@ -27,6 +27,14 @@ const sampleProfile = {
 		emerald: 0,
 		diamond: 0
 	},
+	workers:{
+		"john":false,
+		"julie":false,
+		"harry":false,
+		"marrie":false,
+		"alex":false,
+		"dave":false
+	},
 	antiques:{
 		teapot: 0, //iron
 		ring: 0, //gold & diamond
@@ -42,7 +50,7 @@ let orePrice = [2, 4, 5, 10, 15, 22]
 var game = new Phaser.Game(config);
 
 //required var
-let version = "3.2.3";
+let version = "3.2.4";
 let minePerClick = 1;
 let profile;
 let elaspedTxt, usernameTxt, ttlClicksTxt, cashTxt;
@@ -65,6 +73,13 @@ function preload() {
 	this.load.image('emerald','../assets/images/minerals/emerald.png');
 	this.load.image('diamond','../assets/images/minerals/diamond.png');
 	
+	//loading employees
+	this.load.image('alex','../assets/images/employees/alex.png');
+	this.load.image('dave','../assets/images/employees/dave.png');
+	this.load.image('harry','../assets/images/employees/harry.png');
+	this.load.image('john','../assets/images/employees/john.png');
+	this.load.image('julie','../assets/images/employees/julie.png');
+	this.load.image('marrie','../assets/images/employees/marrie.png');
 	
 	if(document.cookie && !document.cookie.startsWith("pro=clear")){
 		
