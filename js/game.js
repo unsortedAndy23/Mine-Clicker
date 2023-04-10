@@ -52,7 +52,7 @@ let workerMines = [1, 2, 3, 4, 4, 6];
 var game = new Phaser.Game(config);
 
 //required var
-let version = "3.3.1";
+let version = "3.4.0";
 let minePerClick = 1;
 let profile;
 let elaspedTxt, usernameTxt, ttlClicksTxt, cashTxt;
@@ -323,6 +323,13 @@ function tick(){
 	//profile.clicks += minePerClick;
 	profile.hoursPassed++
 
+	//automine
+	let sum = 0
+	Object.keys(profile.workers).forEach((key, index) => {
+  if (profile.workers[key] === true) sum += workerMines[index];
+});
+console.log(sum)
+	mine(sum)
 	//update time passed
 	elaspedTxt.text = elapseFormat(profile.hoursPassed)
 	console.log(profile)
@@ -357,15 +364,16 @@ function transact(money){
 
 function click(){
 	profile.clicks += minePerClick;
-	mine()
+	mine(1)
 	console.log(profile)
 	//update total clicks
 	ttlClicksTxt.text = profile.clicks + " total clicks";
 }
 
-function mine(){
+function mine(n){
+let res = profile.res;
+for(let i= 0; i < n; i++){
 	if(Math.random() < 0.3){
-		let res = profile.res
 		//if the mining is successful
 		let chance = Math.random();
 		if (chance <= 0.5) res.stone++; //50%
@@ -376,12 +384,13 @@ function mine(){
 		else if (chance <= 0.998) res.diamond++; //0.3%
 		else return makeAntique(); //antique pieces
 	
-	return 	updateInv()
 	}else{
 		//give x $ to user if not successful
 		profile.balance += (Math.random()< 0.6) ? 1 : 0;
 		cashTxt.text = `${profile.balance} $`
 	}
+}
+	return updateInv()
 }
 
 function updateInv(item, amount){
