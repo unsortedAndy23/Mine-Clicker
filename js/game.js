@@ -52,7 +52,7 @@ let workerMines = [1, 2, 3, 4, 4, 6];
 var game = new Phaser.Game(config);
 
 //required var
-let version = "3.4.1";
+let version = "3.5.0";
 let minePerClick = 1;
 let profile;
 let elaspedTxt, usernameTxt, ttlClicksTxt, cashTxt;
@@ -142,17 +142,19 @@ function setState(state, showInv, showHome ){
 	}
 
 	//Inventory
+	stuff.invTxt = base.add.text(1140, 200, `${profile.res.stone}\n\n${profile.res.iron}\n\n${profile.res.copper}\n\n${profile.res.gold}\n\n${profile.res.emerald}\n\n${profile.res.diamond}`,{fontSize: "24px"})
+	
 	if(showInv){
+	stuff.invTxt.active = true;
 	stuff.invRect = base.add.graphics().fillStyle(0x634C46, 0.67).fillRoundedRect(1040, 140, 220, 340, { tl: 40, tr: 40, bl: 0, br: 0 })
 	stuff.invTitle = base.add.text(1070, 150, "Inventory",{fontSize: "30px"})
-	stuff.invTxt = base.add.text(1140, 200, `${profile.res.stone}\n\n${profile.res.iron}\n\n${profile.res.copper}\n\n${profile.res.gold}\n\n${profile.res.emerald}\n\n${profile.res.diamond}`,{fontSize: "24px"})
 	stuff.min1 = base.add.image(1100, 200, 'stone').setScale(0.4)
 	stuff.min2 = base.add.image(1100, 250, 'iron').setScale(0.4)
 	stuff.min3 = base.add.image(1100, 300, 'copper').setScale(0.4)
 	stuff.min4 = base.add.image(1100, 350, 'gold').setScale(0.4)
 	stuff.min5 = base.add.image(1100, 400, 'emerald').setScale(0.4)
 	stuff.min6 = base.add.image(1100, 450, 'diamond').setScale(0.4)
-	}
+	}else stuff.invTxt.active = false;
 
 	//save button & text
 	let saveTxt = base.add.text(30, 70, "Save")
@@ -203,11 +205,11 @@ function setState(state, showInv, showHome ){
 	ttlClicksTxt = base.add.text(1160, 65, profile.clicks + " total clicks", {fontSize: "26px"}).setOrigin(0.5)
 	cashTxt = base.add.text(1180, 100, profile.balance + " $", {fontSize: "26px", fontStyle:"bold", fill:'#0F710D'}).setOrigin(0.5)
 
-	//states :- 'home', 'shop', 'ironsmith', 'linkedin', 'antiques'
+	//states :- 'home', 'shop', 'ironsmith', 'work', 'antiques'
 	if((!state) || (state === 'home')) home();
 	else if(state === 'shop') shop();//shop
 	else if(state === 'ironsmith') return; //ironsmith
-	else if(state === 'ironsmith') return; //ironsmith
+	else if(state === 'work') return work(); //work
 }
 
 
@@ -245,7 +247,7 @@ function home(){
 	//workers icon
 	stuff.workTxt = base.add.text(60, 690, "Workers",{fontSize: "20px"})
 	stuff.workImg = base.add.image(100, 640, 'work').setScale(.8)
-		.setInteractive().on('pointerdown', function(){setState('work', true, true)}).on('pointerover', function(){
+		.setInteractive().on('pointerdown', function(){setState('work', false, true)}).on('pointerover', function(){
 			stuff.workTxt.setVisible(true);this.setScale(0.7)}).on('pointerout', function(){stuff.workTxt.setVisible(false);this.setScale(0.8)})
 
 	//workers list
@@ -313,6 +315,36 @@ function shop(){
 		no++
 		i += 140
 	}
+}
+//workers page
+function work(){
+stuff.workersBox = base.add.graphics().fillStyle(0x59463B, 1)
+	.fillRoundedRect(20, 140, 1240, 560, 30)
+stuff.wrkTtle = base.add.text(640, 180, "Hire Workers", {fontSize: "50px", fontStyle: "bold"}).setOrigin(0.5)
+
+let wrkrs = Object.keys(sampleProfile.workers)
+let no = 0;
+let postns = [{x:100, y: 360}, {x:500, y: 360}, {x:900, y: 360},
+			  {x:100, y: 580}, {x:500, y: 580}, {x:900, y: 580}];
+
+for(no;no <= 5; no++){
+	let pos = postns[no]
+	console.log(no)
+stuff[wrkrs[no] + "Img"] = base.add.image(pos.x, pos.y, wrkrs[no]).setScale(1.6)
+stuff[wrkrs[no] + "Name"] = base.add.text(pos.x+ 100, pos.y - 80, wrkrs[no].toUpperCase(), {fontSize: "40px", fontStyle:"bold"})
+stuff[wrkrs[no] + "Mines"] = base.add.text(pos.x+ 90, pos.y - 30, `+${workerMines[no]} mines/hr`, {fontSize: "30px"})
+stuff[wrkrs[no] + "HireBtn"] = base.add.rectangle(pos.x + 180, pos.y + 40 ,160,60).setOrigin(0.5).setFillStyle((profile.workers[wrkrs[no]] === false) ? 0xc76a2c : 0x402717)
+.setInteractive().on('pointerdown', function(){
+	let worker = Object.keys(stuff).find(key => stuff[key] === this).slice(0, -7);
+	if(profile.workers[worker] === false && profile.balance >= workerCost[[Object.keys(profile.workers).indexOf(worker)]]){
+		profile.workers[worker] = true;
+		console.log(Object.keys(profile.workers).indexOf(worker))
+		transact(-(workerCost[Object.keys(profile.workers).indexOf(worker)]))
+		setState("work", false, true)
+	}
+});
+stuff[wrkrs[no] + "HireTxt"] = base.add.text(pos.x+ 140, pos.y + 20,(profile.workers[wrkrs[no]] === false) ? (workerCost[no] + " $") : "HIRED", {fontSize: "30px"})
+}
 }
 
 //runs every x seconds
