@@ -52,7 +52,7 @@ let workerMines = [1, 2, 3, 4, 4, 6];
 var game = new Phaser.Game(config);
 
 //required var
-let version = "3.3.0";
+let version = "3.3.1";
 let minePerClick = 1;
 let profile;
 let elaspedTxt, usernameTxt, ttlClicksTxt, cashTxt;
@@ -265,7 +265,7 @@ function home(){
 				stuff.workers.imgs.push(base.add.image(pos[po].x, pos[po].y, workNames[index]).setScale(0.6))
 				stuff.workers.txts.push(base.add.text(pos[po].x+ 38, pos[po].y - 20, workNames[index], {fontStyle:"bold", fontSize: "22px"}))
 				stuff.workers.costs.push(base.add.text(pos[po].x+ 34, pos[po].y, `+${workerMines[index]} mines/hr`))
-				ttlMines = workerMines[index];
+				ttlMines += workerMines[index];
 			}else {
 				stuff.workers.imgs.push(base.add.rectangle(pos[po].x, pos[po].y, 60, 60, 0xFFFFFF));
 				stuff.workers.txts.push(base.add.text(pos[po].x+ 38, pos[po].y - 20, "???", {fontStyle:"bold", fontSize: "22px"}))
