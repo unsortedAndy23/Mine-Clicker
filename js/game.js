@@ -52,7 +52,7 @@ let workerMines = [1, 2, 3, 4, 4, 6];
 var game = new Phaser.Game(config);
 
 //required var
-let version = "3.4.0";
+let version = "3.4.1";
 let minePerClick = 1;
 let profile;
 let elaspedTxt, usernameTxt, ttlClicksTxt, cashTxt;
@@ -256,19 +256,18 @@ function home(){
 	.fillRoundedRect(800, 510, 230, 40, { tl: 0, tr: 30, bl: 0, br: 0 })
 	let pos = [{x:530, y: 590}, {x:710, y: 590}, {x:890, y: 590},
 		{x:530, y: 670}, {x:710, y: 670}, {x:890, y: 670}];
-		stuff.workers = {imgs: [], txts: [], costs: []}
 		let workNames = Object.keys(profile.workers);
 		let ttlMines = 0;
 		for(let po in pos){
 			let index = pos.indexOf(pos[po]);
 			if(profile.workers[workNames[index]] === true){
-				stuff.workers.imgs.push(base.add.image(pos[po].x, pos[po].y, workNames[index]).setScale(0.6))
-				stuff.workers.txts.push(base.add.text(pos[po].x+ 38, pos[po].y - 20, workNames[index], {fontStyle:"bold", fontSize: "22px"}))
-				stuff.workers.costs.push(base.add.text(pos[po].x+ 34, pos[po].y, `+${workerMines[index]} mines/hr`))
+				stuff[index+ "wImgs"] = (base.add.image(pos[po].x, pos[po].y, workNames[index]).setScale(0.6))
+				stuff[index+ "wTxts"] = (base.add.text(pos[po].x+ 38, pos[po].y - 20, workNames[index], {fontStyle:"bold", fontSize: "22px"}))
+				stuff[index+ "wCosts"] = (base.add.text(pos[po].x+ 34, pos[po].y, `+${workerMines[index]} mines/hr`))
 				ttlMines += workerMines[index];
 			}else {
-				stuff.workers.imgs.push(base.add.rectangle(pos[po].x, pos[po].y, 60, 60, 0xFFFFFF));
-				stuff.workers.txts.push(base.add.text(pos[po].x+ 38, pos[po].y - 20, "???", {fontStyle:"bold", fontSize: "22px"}))
+				stuff[index+ "wImgs"] = (base.add.rectangle(pos[po].x, pos[po].y, 60, 60, 0xFFFFFF));
+				stuff[index+ "wTxts"] = (base.add.text(pos[po].x+ 38, pos[po].y - 20, "???", {fontStyle:"bold", fontSize: "22px"}))
 			}
 		}
 		stuff.wListTxt = base.add.text(500, 520, `Hired Workers		  +${ttlMines} mines/hr`, {fontSize: "30px", fontStyle:"bold"})
