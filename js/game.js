@@ -52,7 +52,7 @@ let workerMines = [1, 2, 3, 4, 4, 6];
 var game = new Phaser.Game(config);
 
 //required var
-let version = "3.6.3";
+let version = "3.6.4";
 let minePerClick = 1;
 let profile;
 let floatTimer;
@@ -60,29 +60,29 @@ let elaspedTxt, usernameTxt, ttlClicksTxt, cashTxt;
 let base; //main object
 let stuff = new Object(); //object inside
 function preload() {
-	this.load.image('background', '/assets/images/bg_cave.jpg');
-	this.load.image('mineLogo', '/assets/images/mine.png');
-	this.load.image('save','/assets/images/save.png');
-	this.load.image('ironsmith','/assets/images/ironsmith.png');
-	this.load.image('shop','/assets/images/shop.png');
-	this.load.image('work','/assets/images/work.png');
-	this.load.image('home','/assets/images/home.png');
+	this.load.image('background', 'assets/images/bg_cave.jpg');
+	this.load.image('mineLogo', 'assets/images/mine.png');
+	this.load.image('save','assets/images/save.png');
+	this.load.image('ironsmith','assets/images/ironsmith.png');
+	this.load.image('shop','assets/images/shop.png');
+	this.load.image('work','assets/images/work.png');
+	this.load.image('home','assets/images/home.png');
 	
 	//loading minerals
-	this.load.image('stone','/assets/images/minerals/stone.png');
-	this.load.image('iron','/assets/images/minerals/iron.png');
-	this.load.image('copper','/assets/images/minerals/copper.png');
-	this.load.image('gold','/assets/images/minerals/gold.png');
-	this.load.image('emerald','/assets/images/minerals/emerald.png');
-	this.load.image('diamond','/assets/images/minerals/diamond.png');
+	this.load.image('stone','assets/images/minerals/stone.png');
+	this.load.image('iron','assets/images/minerals/iron.png');
+	this.load.image('copper','assets/images/minerals/copper.png');
+	this.load.image('gold','assets/images/minerals/gold.png');
+	this.load.image('emerald','assets/images/minerals/emerald.png');
+	this.load.image('diamond','assets/images/minerals/diamond.png');
 	
 	//loading employees
-	this.load.image('alex','/assets/images/employees/alex.png');
-	this.load.image('dave','/assets/images/employees/dave.png');
-	this.load.image('harry','/assets/images/employees/harry.png');
-	this.load.image('john','/assets/images/employees/john.png');
-	this.load.image('julie','/assets/images/employees/julie.png');
-	this.load.image('marrie','/assets/images/employees/marrie.png');
+	this.load.image('alex','assets/images/employees/alex.png');
+	this.load.image('dave','assets/images/employees/dave.png');
+	this.load.image('harry','assets/images/employees/harry.png');
+	this.load.image('john','assets/images/employees/john.png');
+	this.load.image('julie','assets/images/employees/julie.png');
+	this.load.image('marrie','assets/images/employees/marrie.png');
 	
 	if(document.cookie && !document.cookie.startsWith("pro=clear")){
 		
