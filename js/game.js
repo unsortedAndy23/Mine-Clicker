@@ -52,9 +52,10 @@ let workerMines = [1, 2, 3, 4, 4, 6];
 var game = new Phaser.Game(config);
 
 //required var
-let version = "3.5.0";
+let version = "3.6.0";
 let minePerClick = 1;
 let profile;
+let floatTimer;
 let elaspedTxt, usernameTxt, ttlClicksTxt, cashTxt;
 let base; //main object
 let stuff = new Object(); //object inside
@@ -223,10 +224,11 @@ function home(){
 	//mine button
 	stuff.mineBg = base.add.graphics().fillStyle(0xC36D1D, 0.22).fillCircle(680, 300, 100).fillCircle(680, 300, 120)
 	stuff.mineBtn = base.add.sprite(684, 300, 'mineLogo').setScale(0.4).setInteractive()
-	.on('pointerdown', function() {
+	.on('pointerdown', function(pointer) {
 	  this.scale -= 0.05;
 	  //add clicks
 	  click()
+    floatText("Click!", pointer.x, pointer.y);
 	}).on('pointerup', function() {
 		this.scale = 0.4;
 	  });
@@ -429,6 +431,41 @@ function updateInv(item, amount){
 	let min = profile.res
 	stuff.invTxt.text = `${min.stone}\n\n${min.iron}\n\n${min.copper}\n\n${min.gold}\n\n${min.emerald}\n\n${min.diamond}`
 }
+
+function floatText(text, x, y){
+	  const textObj = base.add.text(x, y, text, {
+		font: '24px Arial',
+		fill: '#ffffff'
+	  });
+
+  const segmentPositions = [];
+  for (let i = 0; i < 20; i++) {
+    segmentPositions.push({
+      x: x, y: y + (i % 2 === 0 ? i * -5 : (i + 1) * -5)
+    });
+  }
+
+	stuff.floaTween = base.tweens.add({
+    targets: textObj,
+    y: '-=80',
+    ease: 'Power1',
+    duration: 1000,
+    onUpdate: (tween, target) => {
+	target.alpha -= 0.01
+      const segmentIndex = Math.floor(tween.progress * 20);
+      const segment = segmentPositions[segmentIndex];
+      if (segment) {
+        target.x = segment.x;
+        target.y = segment.y;
+      }
+    },
+    onComplete: () => {
+      textObj.destroy();
+    }
+  });
+
+
+	}
 
 function save(){
 let enData = CryptoJS.AES.encrypt(JSON.stringify(profile), 'openkeyLOL').toString();
