@@ -52,7 +52,7 @@ let workerMines = [1, 2, 3, 4, 4, 6];
 var game = new Phaser.Game(config);
 
 //required var
-let version = "3.6.1";
+let version = "3.6.2";
 let minePerClick = 1;
 let profile;
 let floatTimer;
@@ -227,8 +227,8 @@ function home(){
 	.on('pointerdown', function(pointer) {
 	  this.scale -= 0.05;
 	  //add clicks
-	  click()
-    floatText("Click!", pointer.x, pointer.y);
+	  let item = click()
+    floatText(`${item}!`, pointer.x, pointer.y);
 	}).on('pointerup', function() {
 		this.scale = 0.4;
 	  });
@@ -361,7 +361,7 @@ function tick(){
 	Object.keys(profile.workers).forEach((key, index) => {
   if (profile.workers[key] === true) sum += workerMines[index];
 });
-console.log(sum)
+if (sum > 0) floatText(sum + " mines", 840, 500);
 	mine(sum)
 	//update time passed
 	elaspedTxt.text = elapseFormat(profile.hoursPassed)
@@ -397,33 +397,35 @@ function transact(money){
 
 function click(){
 	profile.clicks += minePerClick;
-	mine(1)
-	console.log(profile)
 	//update total clicks
 	ttlClicksTxt.text = profile.clicks + " total clicks";
+	return mine(1)
 }
 
 function mine(n){
 let res = profile.res;
+let itm;
 for(let i= 0; i < n; i++){
 	if(Math.random() < 0.3){
 		//if the mining is successful
 		let chance = Math.random();
-		if (chance <= 0.5) res.stone++; //50%
-		else if (chance <= 0.8) res.iron++; //30%
-		else if (chance <= 0.915) res.copper++; //11.5%
-		else if (chance <= 0.975) res.gold++; //5%
-		else if (chance <= 0.995) res.emerald++; //1.5%
-		else if (chance <= 0.998) res.diamond++; //0.3%
-		else return makeAntique(); //antique pieces
+		if (chance <= 0.5) {res.stone++; itm="stone"} //50%
+		else if (chance <= 0.8) {res.iron++; itm="iron"} //30%
+		else if (chance <= 0.915) {res.copper++;itm="copper"} //11.5%
+		else if (chance <= 0.975) {res.gold++;itm="gold"} //5%
+		else if (chance <= 0.995) {res.emerald++;itm="emerald"} //1.5%
+		else if (chance <= 0.998) {res.diamond++; itm="diamond"} //0.3%
+		else {itm="antique!"; return makeAntique();} //antique pieces
 	
 	}else{
 		//give x $ to user if not successful
 		profile.balance += (Math.random()< 0.6) ? 1 : 0;
 		cashTxt.text = `${profile.balance} $`
+		itm="1$ "
 	}
 }
-	return updateInv()
+	updateInv()
+	return itm;
 }
 
 function updateInv(item, amount){
