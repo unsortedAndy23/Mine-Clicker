@@ -52,7 +52,7 @@ let workerMines = [1, 2, 3, 4, 4, 6];
 var game = new Phaser.Game(config);
 
 //required var
-let version = "3.6.2";
+let version = "3.6.3";
 let minePerClick = 1;
 let profile;
 let floatTimer;
@@ -60,29 +60,29 @@ let elaspedTxt, usernameTxt, ttlClicksTxt, cashTxt;
 let base; //main object
 let stuff = new Object(); //object inside
 function preload() {
-	this.load.image('background', '../assets/images/bg_cave.jpg');
-	this.load.image('mineLogo', '../assets/images/mine.png');
-	this.load.image('save','../assets/images/save.png');
-	this.load.image('ironsmith','../assets/images/ironsmith.png');
-	this.load.image('shop','../assets/images/shop.png');
-	this.load.image('work','../assets/images/work.png');
-	this.load.image('home','../assets/images/home.png');
+	this.load.image('background', '/assets/images/bg_cave.jpg');
+	this.load.image('mineLogo', '/assets/images/mine.png');
+	this.load.image('save','/assets/images/save.png');
+	this.load.image('ironsmith','/assets/images/ironsmith.png');
+	this.load.image('shop','/assets/images/shop.png');
+	this.load.image('work','/assets/images/work.png');
+	this.load.image('home','/assets/images/home.png');
 	
 	//loading minerals
-	this.load.image('stone','../assets/images/minerals/stone.png');
-	this.load.image('iron','../assets/images/minerals/iron.png');
-	this.load.image('copper','../assets/images/minerals/copper.png');
-	this.load.image('gold','../assets/images/minerals/gold.png');
-	this.load.image('emerald','../assets/images/minerals/emerald.png');
-	this.load.image('diamond','../assets/images/minerals/diamond.png');
+	this.load.image('stone','/assets/images/minerals/stone.png');
+	this.load.image('iron','/assets/images/minerals/iron.png');
+	this.load.image('copper','/assets/images/minerals/copper.png');
+	this.load.image('gold','/assets/images/minerals/gold.png');
+	this.load.image('emerald','/assets/images/minerals/emerald.png');
+	this.load.image('diamond','/assets/images/minerals/diamond.png');
 	
 	//loading employees
-	this.load.image('alex','../assets/images/employees/alex.png');
-	this.load.image('dave','../assets/images/employees/dave.png');
-	this.load.image('harry','../assets/images/employees/harry.png');
-	this.load.image('john','../assets/images/employees/john.png');
-	this.load.image('julie','../assets/images/employees/julie.png');
-	this.load.image('marrie','../assets/images/employees/marrie.png');
+	this.load.image('alex','/assets/images/employees/alex.png');
+	this.load.image('dave','/assets/images/employees/dave.png');
+	this.load.image('harry','/assets/images/employees/harry.png');
+	this.load.image('john','/assets/images/employees/john.png');
+	this.load.image('julie','/assets/images/employees/julie.png');
+	this.load.image('marrie','/assets/images/employees/marrie.png');
 	
 	if(document.cookie && !document.cookie.startsWith("pro=clear")){
 		
@@ -98,8 +98,6 @@ function preload() {
 		profile = sampleProfile;
 		console.log("Created new key!")
 	}
-	console.log(profile);
-	
 }
 
 function create() {
@@ -120,13 +118,11 @@ function create() {
 }
 
 function setState(state, showInv, showHome ){
-	console.log("State changed to " + state)
 	//clear slate
 	for (const child of Object.values(stuff)) {
 			child.destroy();
 			delete stuff[child]
 	}
-		console.log(stuff)	
 
 /* COMMON THINGS IN ALL THE GAME STATES */
 	//adding background
@@ -171,7 +167,6 @@ function setState(state, showInv, showHome ){
 	base.delBtn = base.add.rectangle(300, 50, 180, 60, 0xff0000).setAlpha(0.7)
 	.setInteractive().on('pointerdown', function(){
 		document.cookie = "pro=clear";
-		console.log(document.cookie)
 		location.reload(true)
 	})
 	base.delTxt = base.add.text(220, 30, "DELETE!", {fontSize: "36px"})
@@ -279,7 +274,6 @@ function home(){
 
 //shop page
 function shop(){
-	console.log("Welcome to shop")
 	stuff.slots = base.add.graphics().fillStyle(0x59463B)
 	.fillRoundedRect(160, 50, 280, 80, 10)
 	stuff.sellTxt = base.add.text(180, 70, "SELL" , {fontSize:"40px", fontStyle:"bold"})
@@ -294,7 +288,6 @@ function shop(){
 		stuff[res[no]+"sOneBox"] = base.add.rectangle(i+30, 280,50,20).setOrigin(0.5).setFillStyle(0xc76a2c)
 		.setInteractive().on('pointerdown', function(){
 			let item = Object.keys(stuff).find(key => stuff[key] === this).slice(0, -7);
-			console.log(profile.res[item])
 			if(profile.res[item] > 0){
 				updateInv(item, -1);
 				transact(orePrice[res.indexOf(item)])
@@ -304,7 +297,6 @@ function shop(){
 		stuff[res[no]+"sAllBox"] = base.add.rectangle(i+90, 280,50,20, 0x9e6c33).setOrigin(0.5)
 		.setInteractive().on('pointerdown', function(){
 			let item = Object.keys(stuff).find(key => stuff[key] === this).slice(0, -7);
-			console.log(profile.res[item])
 			if(profile.res[item] > 0){
 				let amt = profile.res[item]
 				updateInv(item, -(amt));
@@ -331,7 +323,6 @@ let postns = [{x:100, y: 360}, {x:500, y: 360}, {x:900, y: 360},
 
 for(no;no <= 5; no++){
 	let pos = postns[no]
-	console.log(no)
 stuff[wrkrs[no] + "Img"] = base.add.image(pos.x, pos.y, wrkrs[no]).setScale(1.6)
 stuff[wrkrs[no] + "Name"] = base.add.text(pos.x+ 100, pos.y - 80, wrkrs[no].toUpperCase(), {fontSize: "40px", fontStyle:"bold"})
 stuff[wrkrs[no] + "Mines"] = base.add.text(pos.x+ 90, pos.y - 30, `+${workerMines[no]} mines/hr`, {fontSize: "30px"})
@@ -340,7 +331,6 @@ stuff[wrkrs[no] + "HireBtn"] = base.add.rectangle(pos.x + 180, pos.y + 40 ,160,6
 	let worker = Object.keys(stuff).find(key => stuff[key] === this).slice(0, -7);
 	if(profile.workers[worker] === false && profile.balance >= workerCost[[Object.keys(profile.workers).indexOf(worker)]]){
 		profile.workers[worker] = true;
-		console.log(Object.keys(profile.workers).indexOf(worker))
 		transact(-(workerCost[Object.keys(profile.workers).indexOf(worker)]))
 		setState("work", false, true)
 	}
@@ -365,7 +355,6 @@ if (sum > 0) floatText(sum + " mines", 840, 500);
 	mine(sum)
 	//update time passed
 	elaspedTxt.text = elapseFormat(profile.hoursPassed)
-	console.log(profile)
 }
 
 function elapseFormat(hours) {
