@@ -36,11 +36,10 @@ const sampleProfile = {
 		"dave":false
 	},
 	antiques:{
-		teapot: 0, //iron
-		ring: 0, //gold & diamond
 		globe: 0, //stone & copper
 		sword: 0, //iron & copper
 		wand: 0, //gold and emerald
+		ring: 0, //gold & diamond
 		crown: 0 //gold, emerald & diamond
 	}
 }
@@ -52,7 +51,7 @@ let workerMines = [1, 2, 3, 4, 4, 6];
 var game = new Phaser.Game(config);
 
 //required var
-let version = "3.6.4";
+let version = "3.7.0";
 let minePerClick = 1;
 let profile;
 let floatTimer;
@@ -83,6 +82,13 @@ function preload() {
 	this.load.image('john','assets/images/employees/john.png');
 	this.load.image('julie','assets/images/employees/julie.png');
 	this.load.image('marrie','assets/images/employees/marrie.png');
+
+	//loading antiques
+	this.load.image('globe','assets/images/antiques/globe.png');
+	this.load.image('sword','assets/images/antiques/sword.png');
+	this.load.image('wand','assets/images/antiques/wand.png');
+	this.load.image('ring','assets/images/antiques/ring.png');
+	this.load.image('crown','assets/images/antiques/crown.png');
 	
 	if(document.cookie && !document.cookie.startsWith("pro=clear")){
 		
