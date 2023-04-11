@@ -51,7 +51,7 @@ let workerMines = [1, 2, 3, 4, 4, 6];
 var game = new Phaser.Game(config);
 
 //required var
-let version = "3.7.0";
+let version = "3.8.0";
 let minePerClick = 1;
 let profile;
 let floatTimer;
@@ -424,8 +424,24 @@ for(let i= 0; i < n; i++){
 }
 
 function updateInv(item, amount){
-	if(item) profile.res[item] += (amount || 1)
 	let min = profile.res
+	if(!item){
+		let minerals = Object.keys(min);
+		let oldInv = stuff.invTxt.text.split("\n\n")
+		let newInv = Object.values(min)
+		for (let i = 0; i < oldInv.length; i++) {
+			let oldNum = parseInt(oldInv[i]);
+			let newNum = parseInt(newInv[i]);
+			if (newNum > oldNum) {
+			stuff[`min${i+1}`].scale += .08
+			setTimeout(function() {
+				stuff[`min${i+1}`].scale = 0.4;
+			  }, 200);
+			}
+		  
+		}
+	}else min[item] += (amount || 1)
+	
 	stuff.invTxt.text = `${min.stone}\n\n${min.iron}\n\n${min.copper}\n\n${min.gold}\n\n${min.emerald}\n\n${min.diamond}`
 }
 
