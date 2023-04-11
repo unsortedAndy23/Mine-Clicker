@@ -52,7 +52,7 @@ let workerMines = [1, 2, 3, 4, 4, 6];
 var game = new Phaser.Game(config);
 
 //required var
-let version = "3.6.0";
+let version = "3.6.1";
 let minePerClick = 1;
 let profile;
 let floatTimer;
@@ -445,7 +445,7 @@ function floatText(text, x, y){
     });
   }
 
-	stuff.floaTween = base.tweens.add({
+	floaTween = base.tweens.add({
     targets: textObj,
     y: '-=80',
     ease: 'Power1',
