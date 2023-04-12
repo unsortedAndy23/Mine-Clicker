@@ -51,7 +51,7 @@ let workerMines = [1, 2, 3, 4, 4, 6];
 var game = new Phaser.Game(config);
 
 //required var
-let version = "3.10.0";
+let version = "3.11.0";
 let minePerClick = 1;
 let profile;
 let floatTimer;
@@ -66,6 +66,7 @@ function preload() {
 	this.load.image('shop','assets/images/shop.png');
 	this.load.image('work','assets/images/work.png');
 	this.load.image('home','assets/images/home.png');
+	this.load.image('fullscreen','assets/images/fullscreen.png');
 	
 	//loading minerals
 	this.load.image('stone','assets/images/minerals/stone.png');
@@ -288,7 +289,15 @@ function home(){
 
 	//top text
 	stuff.topTxt = base.add.text(640, 140, "Get Grinding!", {font:"30px Arial", fill:"#ffffff"}).setOrigin(0.5)
-	}
+	
+	//full screen
+	stuff.fullScreen = base.add.image(450, 36, 'fullscreen').setScale(0.6).setInteractive()
+	.on('pointerdown', function(){
+		if (document.fullscreenElement) document.exitFullscreen();
+		else document.body.requestFullscreen();
+	})
+
+}
 
 //shop page
 function shop(){
@@ -364,7 +373,7 @@ function tick(){
 	//profile.clicks += minePerClick;
 	profile.hoursPassed++
 let b = profile.balance;
-let txt = "Cheated diamonds are never shiny :[";
+let txt = "Cheated minerals are always dull :[";
 	//edit toptext
 	if(b <=30) txt="Your wealth is equivalent to that of a peasant";
 	else if(b <=60) txt="You are struggling to make ends meet";
@@ -381,7 +390,7 @@ if (stuff.topTxt && stuff.topTxt.active === true) stuff.topTxt.text = txt;
 	Object.keys(profile.workers).forEach((key, index) => {
   if (profile.workers[key] === true) sum += workerMines[index];
 });
-if (sum > 0) floatText(sum + " mines", 840, 500);
+if ((sum > 0)&&((stuff.wListTxt) && (stuff.wListTxt.active === true))) floatText(sum + " mines", 840, 500);
 	mine(sum)
 	//update time passed
 	elaspedTxt.text = elapseFormat(profile.hoursPassed)
