@@ -51,7 +51,7 @@ let workerMines = [1, 2, 3, 4, 4, 6];
 var game = new Phaser.Game(config);
 
 //required var
-let version = "3.8.0";
+let version = "3.9.0";
 let minePerClick = 1;
 let profile;
 let floatTimer;
@@ -225,12 +225,21 @@ function home(){
 	//mine button
 	stuff.mineBg = base.add.graphics().fillStyle(0xC36D1D, 0.22).fillCircle(680, 300, 100).fillCircle(680, 300, 120)
 	stuff.mineBtn = base.add.sprite(684, 300, 'mineLogo').setScale(0.4).setInteractive()
-	.on('pointerdown', function(pointer) {
+	let mineTween = base.tweens.add({
+		targets: stuff.mineBtn,
+		scale: 0.45,
+		duration: 1000,
+		yoyo: true,
+		repeat: -1
+	  });
+	  stuff.mineBtn.on('pointerdown', function(pointer) {
+		mineTween.pause();
 	  this.scale -= 0.05;
 	  //add clicks
 	  let item = click()
     floatText(`${item}!`, pointer.x, pointer.y);
 	}).on('pointerup', function() {
+		mineTween.resume();
 		this.scale = 0.4;
 	  });
 
