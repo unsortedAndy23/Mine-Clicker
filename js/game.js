@@ -44,14 +44,15 @@ const sampleProfile = {
 	}
 }
 
-//ore price list
+//data
 let orePrice = [2, 4, 5, 10, 15, 22]
 let workerCost = [30, 60, 100, 200, 350, 700];
 let workerMines = [1, 2, 3, 4, 4, 6];
+let antiqueReqs = ["stone 10; copper 25", "copper 16; iron 20", "gold 20; emerald 1", "gold 6; diamond 1", "gold 30; emerald 5; diamond 1"]
 var game = new Phaser.Game(config);
 
 //required var
-let version = "3.11.0";
+let version = "3.12.0";
 let minePerClick = 1;
 let profile;
 let floatTimer;
@@ -62,7 +63,7 @@ function preload() {
 	this.load.image('background', 'assets/images/bg_cave.jpg');
 	this.load.image('mineLogo', 'assets/images/mine.png');
 	this.load.image('save','assets/images/save.png');
-	this.load.image('ironsmith','assets/images/ironsmith.png');
+	this.load.image('blacksmith','assets/images/blacksmith.png');
 	this.load.image('shop','assets/images/shop.png');
 	this.load.image('work','assets/images/work.png');
 	this.load.image('home','assets/images/home.png');
@@ -208,10 +209,10 @@ function setState(state, showInv, showHome ){
 	ttlClicksTxt = base.add.text(1160, 65, profile.clicks + " total clicks", {fontSize: "26px"}).setOrigin(0.5)
 	cashTxt = base.add.text(1180, 100, profile.balance + " $", {fontSize: "26px", fontStyle:"bold", fill:'#0F710D'}).setOrigin(0.5)
 
-	//states :- 'home', 'shop', 'ironsmith', 'work', 'antiques'
+	//states :- 'home', 'shop', 'blacksmith', 'work', 'antiques'
 	if((!state) || (state === 'home')) home();
-	else if(state === 'shop') shop();//shop
-	else if(state === 'ironsmith') return; //ironsmith
+	else if(state === 'shop') shop(); //shop
+	else if(state === 'blacksmith') blacksmith(); //blacksmith
 	else if(state === 'work') return work(); //work
 }
 
@@ -244,12 +245,12 @@ function home(){
 		this.scale = 0.4;
 	  });
 
-	//ironsmith icon
-	stuff.ironsmTxt = base.add.text(30, 230, "Ironsmith",{fontSize: "20px"})
-	stuff.ironsmBtn = base.add.rectangle(70, 180, 80, 80, 0xDEBB78).setAlpha(0.56)
-		.setInteractive().on('pointerdown', function(){setState('ironsmith', true, true)}).on('pointerover', function(){
-			stuff.ironsmTxt.setVisible(true)}).on('pointerout', function(){stuff.ironsmTxt.setVisible(false)})
-		stuff.ironsmImg = base.add.image(stuff.ironsmBtn.x, stuff.ironsmBtn.y, 'ironsmith').setScale(4);
+	//blacksmith icon
+	stuff.blacksmTxt = base.add.text(30, 230, "Blacksmith",{fontSize: "20px"})
+	stuff.blacksmBtn = base.add.rectangle(70, 180, 80, 80, 0xDEBB78).setAlpha(0.56)
+		.setInteractive().on('pointerdown', function(){setState('blacksmith', true, true)}).on('pointerover', function(){
+			stuff.blacksmTxt.setVisible(true)}).on('pointerout', function(){stuff.blacksmTxt.setVisible(false)})
+		stuff.blacksmImg = base.add.image(stuff.blacksmBtn.x, stuff.blacksmBtn.y, 'blacksmith').setScale(4);
 	
 	//shop icon
 	stuff.shopTxt = base.add.text(1080, 690, "Shop",{fontSize: "20px"})
@@ -366,6 +367,46 @@ stuff[wrkrs[no] + "HireTxt"] = base.add.text(pos.x+ 140, pos.y + 20,(profile.wor
 }
 }
 
+//blacksmith page
+function blacksmith(){
+	stuff.bSmith = base.add.graphics().fillStyle(0x8f593b, 0.8)
+	.fillRoundedRect(20, 140, 1000, 560, 30)
+	stuff.bSmithText = base.add.text( 40, 160, "CRAFT ANTIQUES", {font:"30px Arial"})
+	stuff.bSmithStext = base.add.text( 200, 540, "SELECT AN ANTIQUE TO CRAFT", {font:"40px Arial"}).setAlpha(0.7)
+	let x= 120;
+	let names = Object.keys(profile.antiques)
+	for(let i = 0; i < 5; i++){
+		console.log("Lol")
+	stuff["bSmithRect"+i] = base.add.rectangle(x, 300, 160, 160).setFillStyle(0xc98b69).setInteractive()
+	.on('pointerdown', function(){
+		let item = parseInt(Object.keys(stuff).find(key => stuff[key] === this).slice(10, 11))
+		let itemReq = antiqueReqs[item].split("; ");
+		stuff.a_bSmithRect = base.add.rectangle(520, 540, 900, 280).setFillStyle(0xc98b69);
+		stuff.a_bSmithImg = base.add.image(200, 500, names[item]).setScale(2);
+		stuff.a_bSmithTxt = base.add.text(140, 600, names[item], {font:"40px Arial"});
+		stuff.a_reqTtl = base.add.text(500, 440, "REQUIREMENTS", { font:"30px Arial"}).setOrigin(0.5)
+		stuff.a_req = base.add.text(440, 480, itemReq.join("\n"), { font:"26px Arial"})
+		stuff.a_craft = base.add.rectangle(800, 500, 200, 80).setFillStyle(0xcf5a1b).setInteractive()
+		.on('pointerdown', function(){
+			for(itm in itemReq){
+				let reqItem = itemReq[itm].split(" ")[0].trim();
+				let reqAmt = parseInt(itemReq[itm].split(" ")[1]);
+				if(profile.res[reqItem] < reqAmt) return;
+			}
+			//transact
+			for(itm in itemReq){
+				profile.res[itemReq[itm].split(" ")[0].trim()] -= parseInt(itemReq[itm].split(" ")[1])
+			}
+			profile.antiques[names[item]]++
+			floatText("Crafted a "+ names[item], 800, 500);
+		});
+		stuff.a_craftTxt = base.add.text(800, 500, 'CRAFT!',{fontSize:"38px", fontStyle:"bold"}).setOrigin(0.5);
+	})
+	stuff["bSmithImg"+i] = base.add.image(x, 300, names[i]).setScale(1.2)
+	
+	x+= 200;
+	}
+}
 //runs every x seconds
 function tick(){
 	//adds x clicks
