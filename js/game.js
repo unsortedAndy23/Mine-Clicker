@@ -50,48 +50,46 @@ let antiquePrice = [170, 200, 280, 100, 450]
 let workerCost = [30, 60, 100, 200, 350, 700];
 let workerMines = [1, 2, 3, 4, 4, 6];
 let antiqueReqs = ["stone 10; copper 25", "copper 16; iron 20", "gold 20; emerald 1", "gold 6; diamond 1", "gold 30; emerald 5; diamond 1"]
-var game = new Phaser.Game(config);
+const game = new Phaser.Game(config);
 
 //required var
 let version = "4.0.0";
-let minePerClick = 1;
 let profile;
-let floatTimer;
 let elaspedTxt, usernameTxt, ttlClicksTxt, cashTxt;
-let base; //main object
-let stuff = new Object(); //object inside
+let base;
+let stuff = new Object();
 function preload() {
-	this.load.image('background', 'assets/images/bg_cave.jpg');
-	this.load.image('mineLogo', 'assets/images/mine.png');
-	this.load.image('save','assets/images/save.png');
-	this.load.image('blacksmith','assets/images/blacksmith.png');
-	this.load.image('shop','assets/images/shop.png');
-	this.load.image('work','assets/images/work.png');
-	this.load.image('home','assets/images/home.png');
-	this.load.image('fullscreen','assets/images/fullscreen.png');
+	this.load.image('background', 'images/bg_cave.jpg');
+	this.load.image('mineLogo', 'images/mine.png');
+	this.load.image('save','images/save.png');
+	this.load.image('blacksmith','images/blacksmith.png');
+	this.load.image('shop','images/shop.png');
+	this.load.image('work','images/work.png');
+	this.load.image('home','images/home.png');
+	this.load.image('fullscreen','images/fullscreen.png');
 	
 	//loading minerals
-	this.load.image('stone','assets/images/minerals/stone.png');
-	this.load.image('iron','assets/images/minerals/iron.png');
-	this.load.image('copper','assets/images/minerals/copper.png');
-	this.load.image('gold','assets/images/minerals/gold.png');
-	this.load.image('emerald','assets/images/minerals/emerald.png');
-	this.load.image('diamond','assets/images/minerals/diamond.png');
+	this.load.image('stone','images/minerals/stone.png');
+	this.load.image('iron','images/minerals/iron.png');
+	this.load.image('copper','images/minerals/copper.png');
+	this.load.image('gold','images/minerals/gold.png');
+	this.load.image('emerald','images/minerals/emerald.png');
+	this.load.image('diamond','images/minerals/diamond.png');
 	
 	//loading employees
-	this.load.image('alex','assets/images/employees/alex.png');
-	this.load.image('dave','assets/images/employees/dave.png');
-	this.load.image('harry','assets/images/employees/harry.png');
-	this.load.image('john','assets/images/employees/john.png');
-	this.load.image('julie','assets/images/employees/julie.png');
-	this.load.image('marrie','assets/images/employees/marrie.png');
+	this.load.image('alex','images/employees/alex.png');
+	this.load.image('dave','images/employees/dave.png');
+	this.load.image('harry','images/employees/harry.png');
+	this.load.image('john','images/employees/john.png');
+	this.load.image('julie','images/employees/julie.png');
+	this.load.image('marrie','images/employees/marrie.png');
 
 	//loading antiques
-	this.load.image('globe','assets/images/antiques/globe.png');
-	this.load.image('sword','assets/images/antiques/sword.png');
-	this.load.image('wand','assets/images/antiques/wand.png');
-	this.load.image('ring','assets/images/antiques/ring.png');
-	this.load.image('crown','assets/images/antiques/crown.png');
+	this.load.image('globe','images/antiques/globe.png');
+	this.load.image('sword','images/antiques/sword.png');
+	this.load.image('wand','images/antiques/wand.png');
+	this.load.image('ring','images/antiques/ring.png');
+	this.load.image('crown','images/antiques/crown.png');
 	
 	if(document.cookie && !document.cookie.startsWith("pro=clear")){
 		
@@ -120,6 +118,13 @@ function create() {
 	this.time.addEvent({ 
 		delay: 3 * 1000,
         callback: tick,
+        callbackScope: this,
+        loop: true
+    });
+	//save every 30sec
+	this.time.addEvent({ 
+		delay: 30 * 1000,
+        callback: save,
         callbackScope: this,
         loop: true
     });
@@ -171,14 +176,6 @@ function setState(state, showInv, showHome ){
 		saveTxt.setVisible(false)
 	})
 	base.add.image(base.saveBtn.x, base.saveBtn.y, 'save').setScale(0.1);
-	
-	//temporary delete data button (for dev purpose)
-	base.delBtn = base.add.rectangle(300, 50, 180, 60, 0xff0000).setAlpha(0.7)
-	.setInteractive().on('pointerdown', function(){
-		document.cookie = "pro=clear";
-		location.reload(true)
-	})
-	base.delTxt = base.add.text(220, 30, "DELETE!", {fontSize: "36px"})
 
 	//version
 	base.add.graphics().fillStyle(0x000000, 0.9).fillRoundedRect(100, 0, 100, 40, { tl: 0, tr: 0, bl: 12, br: 12 });
@@ -251,7 +248,7 @@ function home(){
 	stuff.blacksmBtn = base.add.rectangle(70, 180, 80, 80, 0xDEBB78).setAlpha(0.56)
 		.setInteractive().on('pointerdown', function(){setState('blacksmith', true, true)}).on('pointerover', function(){
 			stuff.blacksmTxt.setVisible(true)}).on('pointerout', function(){stuff.blacksmTxt.setVisible(false)})
-		stuff.blacksmImg = base.add.image(stuff.blacksmBtn.x, stuff.blacksmBtn.y, 'blacksmith').setScale(4);
+		stuff.blacksmImg = base.add.image(stuff.blacksmBtn.x, stuff.blacksmBtn.y, 'blacksmith').setScale(1);
 	
 	//shop icon
 	stuff.shopTxt = base.add.text(1080, 690, "Shop",{fontSize: "20px"})
@@ -266,7 +263,7 @@ function home(){
 			stuff.workTxt.setVisible(true);this.setScale(0.7)}).on('pointerout', function(){stuff.workTxt.setVisible(false);this.setScale(0.8)})
 
 	//workers list
-	stuff.wlistBox = base.add.rectangle(760, 636, 540, 170, 0xB18875);
+	stuff.wlistBox = base.add.rectangle(760, 636, 540, 170, 0xbf6c45);
 	stuff.wListTtl = base.add.graphics().fillStyle(0x6D3B24, 0.4)
 	.fillRoundedRect(490, 510, 380, 40, { tl: 30, tr: 0, bl: 0, br: 0 })
 	.fillStyle(0x000000)
@@ -429,14 +426,12 @@ function blacksmith(){
 	x+= 200;
 	}
 }
+
 //runs every x seconds
 function tick(){
-	//adds x clicks
-	//tempoarily commented this functionality
-	//profile.clicks += minePerClick;
 	profile.hoursPassed++
 let b = profile.balance;
-let txt = "Cheated minerals are always dull :[";
+let txt = "";
 	//edit toptext
 	if(b <=30) txt="Your wealth is equivalent to that of a peasant";
 	else if(b <=60) txt="You are struggling to make ends meet";
@@ -446,6 +441,7 @@ let txt = "Cheated minerals are always dull :[";
 	else if(b <=1000) txt="You can afford to travel in relative comfort";
 	else if(b <=4000) txt="You have substantial assets, but you're not among the wealthiest people";
 	else if(b <=10000) txt="You have substantial assets, but you're not among the wealthiest people";
+	else if(b === Infinity) txt="What's the point of cheating BRUH";
 
 if (stuff.topTxt && stuff.topTxt.active === true) stuff.topTxt.text = txt;
 	//automine
@@ -482,12 +478,11 @@ function elapseFormat(hours) {
 function transact(money){
 	//add or remove money
 	profile.balance += (money || 0);
-	console.log(profile.balance)
 	cashTxt.text = profile.balance + " $"
 }
 
 function click(){
-	profile.clicks += minePerClick;
+	profile.clicks += 1;
 	//update total clicks
 	ttlClicksTxt.text = profile.clicks + " total clicks";
 	return mine(1)
@@ -579,6 +574,7 @@ function floatText(text, x, y){
 function save(){
 let enData = CryptoJS.AES.encrypt(JSON.stringify(profile), 'openkeyLOL').toString();
 document.cookie = "pro="+enData;
+floatText("Saved!",60, 80)
 console.log("Saved!")
 }
 
