@@ -51,7 +51,7 @@ let workerMines = [1, 2, 3, 4, 4, 6];
 var game = new Phaser.Game(config);
 
 //required var
-let version = "3.9.0";
+let version = "3.10.0";
 let minePerClick = 1;
 let profile;
 let floatTimer;
@@ -285,7 +285,10 @@ function home(){
 			}
 		}
 		stuff.wListTxt = base.add.text(500, 520, `Hired Workers		  +${ttlMines} mines/hr`, {fontSize: "30px", fontStyle:"bold"})
-}
+
+	//top text
+	stuff.topTxt = base.add.text(640, 140, "Get Grinding!", {font:"30px Arial", fill:"#ffffff"}).setOrigin(0.5)
+	}
 
 //shop page
 function shop(){
@@ -360,7 +363,19 @@ function tick(){
 	//tempoarily commented this functionality
 	//profile.clicks += minePerClick;
 	profile.hoursPassed++
+let b = profile.balance;
+let txt = "Cheated diamonds are never shiny :[";
+	//edit toptext
+	if(b <=30) txt="Your wealth is equivalent to that of a peasant";
+	else if(b <=60) txt="You are struggling to make ends meet";
+	else if(b <=100) txt="You live from hand to mouth";
+	else if(b <=300) txt="You have some savings, but you need to be careful with your spending";
+	else if(b <=500) txt="You have a comfortable lifestyle, but you're not exactly wealthy";
+	else if(b <=1000) txt="You can afford to travel in relative comfort";
+	else if(b <=4000) txt="You have substantial assets, but you're not among the wealthiest people";
+	else if(b <=10000) txt="You have substantial assets, but you're not among the wealthiest people";
 
+if (stuff.topTxt && stuff.topTxt.active === true) stuff.topTxt.text = txt;
 	//automine
 	let sum = 0
 	Object.keys(profile.workers).forEach((key, index) => {
