@@ -46,13 +46,14 @@ const sampleProfile = {
 
 //data
 let orePrice = [2, 4, 5, 10, 15, 22]
+let antiquePrice = [170, 200, 280, 100, 450]
 let workerCost = [30, 60, 100, 200, 350, 700];
 let workerMines = [1, 2, 3, 4, 4, 6];
 let antiqueReqs = ["stone 10; copper 25", "copper 16; iron 20", "gold 20; emerald 1", "gold 6; diamond 1", "gold 30; emerald 5; diamond 1"]
 var game = new Phaser.Game(config);
 
 //required var
-let version = "3.12.0";
+let version = "4.0.0";
 let minePerClick = 1;
 let profile;
 let floatTimer;
@@ -303,8 +304,8 @@ function home(){
 //shop page
 function shop(){
 	stuff.slots = base.add.graphics().fillStyle(0x59463B)
-	.fillRoundedRect(160, 50, 280, 80, 10)
-	stuff.sellTxt = base.add.text(180, 70, "SELL" , {fontSize:"40px", fontStyle:"bold"})
+	.fillRoundedRect(160, 60, 400, 60, 10)
+	stuff.sellResTxt = base.add.text(180, 70, "SELL MINERALS" , {fontSize:"40px", fontStyle:"bold"})
 	res = Object.keys(sampleProfile.res)
 	let no = 0;
 	i = 160;
@@ -336,6 +337,28 @@ function shop(){
 		stuff[res[no]+"sAllTxt"] = base.add.text(i+90, 295,`MAX\n\n${profile.res[res[no]] * orePrice[no]} $`).setOrigin(0.5)
 		no++
 		i += 140
+	}
+	let x = 160;
+	let ant = Object.keys(profile.antiques);
+	stuff.slots.fillStyle(0x59463B).fillRoundedRect(160, 360, 400, 60, 10)
+	stuff.sellResTxt = base.add.text(180, 370, "SELL ANTIQUES" , {fontSize:"40px", fontStyle:"bold"})
+	for(no = 0; no < 5; no++){
+	stuff.slots.fillStyle(0xc98b69, 0.8).fillRoundedRect(x, 440, 150, 260, 10).fillStyle(0xe6c873, 0.8)
+	stuff.slots.fillRoundedRect(x+15, 460, 120, 120, 10)
+	stuff[ant[no]+"A_Icon"] = base.add.image(x+75, 520, ant[no]).setScale(1);
+	stuff[ant[no]+"A_Txt"] = base.add.text(x+75, 600, ant[no], { fontSize: "26px"}).setOrigin(0.5);
+	stuff[ant[no]+"A_Buy"] = base.add.rectangle(x+75, 640, 100, 40).setOrigin(0.5).setFillStyle(0xc46d1b)
+	.setInteractive().on('pointerdown', function(){
+		let item = Object.keys(stuff).find(key => stuff[key] === this).slice(0, -5);
+		if(profile.antiques[item] > 0){
+			transact(antiquePrice[ant.indexOf(item)])
+			profile.antiques[item]--;
+			setState("shop", true, true);
+		}
+	})
+	stuff[ant[no]+"A_Price"] = base.add.text(x+75, 640, antiquePrice[no] + "$", { fontSize: "26px"}).setOrigin(0.5);
+	stuff[ant[no]+"A_Owned"] = base.add.text(x+75, 680, "You own:" + profile.antiques[ant[no]]).setOrigin(0.5);
+	x += 170
 	}
 }
 //workers page
@@ -376,7 +399,6 @@ function blacksmith(){
 	let x= 120;
 	let names = Object.keys(profile.antiques)
 	for(let i = 0; i < 5; i++){
-		console.log("Lol")
 	stuff["bSmithRect"+i] = base.add.rectangle(x, 300, 160, 160).setFillStyle(0xc98b69).setInteractive()
 	.on('pointerdown', function(){
 		let item = parseInt(Object.keys(stuff).find(key => stuff[key] === this).slice(10, 11))
